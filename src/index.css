@@ -1,0 +1,253 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-surface: var(--surface);
+  --color-paper: var(--paper);
+  --color-placeholder: var(--placeholder);
+  --color-focus-ring: var(--focus-ring);
+  --color-category-hover: var(--category-hover);
+  --color-category-active-bg: var(--category-active-bg);
+  --color-category-active-fg: var(--category-active-fg);
+  --color-category-active-count: var(--category-active-count);
+  --color-result-meta-fg: var(--result-meta-fg);
+  --color-hero-ink: var(--hero-ink);
+  --color-hero-muted: var(--hero-muted);
+  --color-note-rule: var(--note-rule);
+  --shadow-shell: var(--shell-shadow);
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme='light'],
+html:not([data-theme]) {
+  color-scheme: light;
+  --ink: #101820;
+  --ink-soft: #2a3441;
+  --muted: #5f6b7a;
+  --line: rgba(16, 24, 32, 0.1);
+  --accent-soft: #dbeafe;
+  --accent-strong: #2563eb;
+  --surface: rgba(255, 255, 255, 0.78);
+  --paper: #e7edf2;
+  --placeholder: #8b97a8;
+  --focus-ring: rgba(37, 99, 235, 0.18);
+  --category-hover: rgba(37, 99, 235, 0.08);
+  --category-active-bg: #101820;
+  --category-active-fg: #f4f7fa;
+  --category-active-count: #93c5fd;
+  --result-meta-fg: #1e3a8a;
+  --grid-line: rgba(16, 24, 32, 0.04);
+  --body-wash-a: rgba(37, 99, 235, 0.14);
+  --body-wash-b: rgba(47, 74, 110, 0.1);
+  --body-top: #eef3f7;
+  --body-bottom: #dde6ee;
+  --hero-scrim: linear-gradient(
+    105deg,
+    rgba(8, 14, 20, 0.88) 0%,
+    rgba(8, 14, 20, 0.72) 48%,
+    rgba(8, 14, 20, 0.42) 100%
+  );
+  --hero-ink: #f7fafc;
+  --hero-muted: rgba(247, 250, 252, 0.78);
+  --note-rule: rgba(16, 24, 32, 0.08);
+  --shell-shadow: 0 18px 50px rgba(16, 24, 32, 0.08);
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #eef2f6;
+  --ink-soft: #c9d1db;
+  --muted: #93a0b0;
+  --line: rgba(238, 242, 246, 0.12);
+  --accent-soft: rgba(96, 165, 250, 0.16);
+  --accent-strong: #93c5fd;
+  --surface: rgba(18, 24, 32, 0.86);
+  --paper: #0b1016;
+  --placeholder: #738091;
+  --focus-ring: rgba(147, 197, 253, 0.22);
+  --category-hover: rgba(96, 165, 250, 0.12);
+  --category-active-bg: #eff6ff;
+  --category-active-fg: #0b1016;
+  --category-active-count: #1d4ed8;
+  --result-meta-fg: #93c5fd;
+  --grid-line: rgba(238, 242, 246, 0.035);
+  --body-wash-a: rgba(96, 165, 250, 0.12);
+  --body-wash-b: rgba(70, 100, 150, 0.12);
+  --body-top: #10161e;
+  --body-bottom: #080c11;
+  --hero-scrim: linear-gradient(
+    105deg,
+    rgba(5, 9, 14, 0.92) 0%,
+    rgba(5, 9, 14, 0.78) 48%,
+    rgba(5, 9, 14, 0.5) 100%
+  );
+  --hero-ink: #f4f7fa;
+  --hero-muted: rgba(244, 247, 250, 0.76);
+  --note-rule: rgba(238, 242, 246, 0.1);
+  --shell-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+@layer base {
+  html {
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100svh;
+    overflow-x: clip;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background:
+      radial-gradient(900px 480px at 8% -6%, var(--body-wash-a), transparent 58%),
+      radial-gradient(700px 420px at 100% 0%, var(--body-wash-b), transparent 52%),
+      linear-gradient(
+        180deg,
+        var(--body-top) 0%,
+        var(--paper) 48%,
+        var(--body-bottom) 100%
+      );
+    background-attachment: fixed;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  .bg-hero-scrim {
+    background-image: var(--hero-scrim);
+  }
+
+  .bg-hero-scrim-mobile {
+    background-image: linear-gradient(
+      180deg,
+      rgba(8, 14, 20, 0.9) 0%,
+      rgba(8, 14, 20, 0.78) 55%,
+      rgba(8, 14, 20, 0.68) 100%
+    );
+  }
+
+  html[data-theme='dark'] .bg-hero-scrim-mobile {
+    background-image: linear-gradient(
+      180deg,
+      rgba(5, 9, 14, 0.94) 0%,
+      rgba(5, 9, 14, 0.84) 55%,
+      rgba(5, 9, 14, 0.72) 100%
+    );
+  }
+
+  .animate-rise {
+    animation: rise 0.65s var(--ease-out-quart) both;
+  }
+
+  .animate-hero-in {
+    animation: hero-in 0.7s var(--ease-out-quart) both;
+  }
+
+  .animate-hero-ken {
+    animation: hero-ken 14s var(--ease-out-quart) both;
+  }
+
+  .animate-panel-in {
+    animation: panel-in 0.4s var(--ease-out-quart) both;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-ken {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-hero-in,
+  .animate-hero-ken,
+  .animate-panel-in {
+    animation: none !important;
+  }
+
+  .animate-hero-ken {
+    transform: none;
+  }
+}
