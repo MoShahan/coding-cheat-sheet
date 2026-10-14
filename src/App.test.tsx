@@ -1,7 +1,8 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { renderWithRouter } from './test/renderWithRouter'
 import App from './App'
 
 describe('App', () => {
@@ -12,7 +13,7 @@ describe('App', () => {
   })
 
   it('renders the brand and default topic', () => {
-    render(<App />)
+    renderWithRouter(<App />)
 
     expect(
       screen.getByText('Coding Cheat Sheet', { selector: '.brand' }),
@@ -30,7 +31,7 @@ describe('App', () => {
 
   it('toggles between light and dark theme', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderWithRouter(<App />)
 
     const toggle = screen.getByRole('button', {
       name: /switch to dark theme/i,
@@ -45,7 +46,7 @@ describe('App', () => {
 
   it('sorts categories alphabetically when A-Z is enabled', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderWithRouter(<App />)
 
     const nav = screen.getByRole('navigation', {
       name: /topic types/i,
@@ -73,7 +74,7 @@ describe('App', () => {
 
   it('searches across all categories when enabled', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderWithRouter(<App />)
 
     await user.click(
       screen.getByRole('switch', { name: /search all categories/i }),
@@ -99,7 +100,7 @@ describe('App', () => {
 
   it('shows answers openly when switching topics', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderWithRouter(<App />)
 
     const nav = screen.getByRole('navigation', {
       name: /topic types/i,
@@ -118,5 +119,17 @@ describe('App', () => {
     expect(
       screen.getByText(/prefer const by default/i),
     ).toBeInTheDocument()
+  })
+
+  it('navigates to the JS playground', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<App />)
+
+    await user.click(screen.getByRole('link', { name: /js playground/i }))
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: /javascript console/i }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^run$/i })).toBeInTheDocument()
   })
 })

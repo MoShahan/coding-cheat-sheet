@@ -4,6 +4,10 @@ Personal interview revision site-not a quiz. Skim short notes across frontend, b
 
 License: [MIT](LICENSE)
 
+![Coding Cheat Sheet app preview](docs/screenshots/app-preview.png)
+
+![JS Playground preview](docs/screenshots/playground-preview.png)
+
 ## Stack
 
 - React 19 + TypeScript
@@ -18,6 +22,8 @@ License: [MIT](LICENSE)
 **Backend & fullstack:** Node.js, Express, NestJS, Next.js, Django, Ruby on Rails
 
 **Databases:** MongoDB, PostgreSQL
+
+**Playground:** `/playground` - run vanilla JavaScript in a browser console (link from the home hero).
 
 ## Scripts
 
