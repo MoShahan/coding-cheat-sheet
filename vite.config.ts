@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  base: '/coding-cheat-sheet/',
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/coding-cheat-sheet/' : '/',
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'jsdom',
