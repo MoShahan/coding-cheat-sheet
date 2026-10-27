@@ -65,4 +65,15 @@ Structure: **category → topic → questions**, where each question has:
 
 Notes sort by difficulty, then A-Z. Add a matching icon in `src/components/TopicVisual.tsx` when you create a new category type.
 
-Keep answers as bullets (not paragraphs). A bullet can be one or two sentences so the meaning stays clear. Run `npm run lint` and `npm test` before you open a PR.
+Keep answers as bullets (not paragraphs). A bullet can be one or two sentences so the meaning stays clear.
+
+Mark code yourself. The app does not guess snippets from English:
+
+- Inline: `` Use a real `<button>`. ``
+- Block: put a fenced snippet in the string, including the newlines:
+
+```ts
+'```\nfunction makeCounter() {\n  let n = 0\n  return () => ++n\n}\n``` each call gets its own `n`.'
+```
+
+Run `npm run lint` and `npm test` before you open a PR.

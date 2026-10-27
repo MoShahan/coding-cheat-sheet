@@ -1,7 +1,10 @@
 export type Question = {
   id: string
   question: string
-  /** Bullet lines only - each can be a short sentence or two, not a paragraph. */
+  /**
+   * Bullet lines only. Mark code yourself: `inline` or fenced ``` blocks.
+   * The renderer does not guess what is code.
+   */
   answer: string[]
   difficulty: 'easy' | 'medium' | 'hard'
 }

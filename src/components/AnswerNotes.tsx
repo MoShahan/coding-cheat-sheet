@@ -1,11 +1,10 @@
-import { getAnswerDisplayParts, isCodeBlock } from '../lib/formatAnswer'
+import { getAnswerDisplayParts } from '../lib/formatAnswer'
 
 type AnswerNotesProps = {
   lines: string[]
 }
 
-function AnswerCode({ value }: { value: string }) {
-  const block = isCodeBlock(value)
+function AnswerCode({ value, block }: { value: string; block?: boolean }) {
 
   if (block) {
     return (
@@ -34,7 +33,11 @@ export function AnswerNotes({ lines }: AnswerNotesProps) {
         >
           {getAnswerDisplayParts(line).map((part, index) =>
             part.type === 'code' ? (
-              <AnswerCode key={`${part.value}-${index}`} value={part.value} />
+              <AnswerCode
+                key={`${part.value}-${index}`}
+                value={part.value}
+                block={part.block}
+              />
             ) : (
               <span key={`${part.value}-${index}`}>{part.value}</span>
             ),

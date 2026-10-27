@@ -165,7 +165,7 @@ export function CategoryPrintDocument({ category }: CategoryPrintDocumentProps) 
                           <span key={`${part.value}-${index}`}>{part.value}</span>
                         )
                       }
-                      const block = isCodeBlock(part.value)
+                      const block = isCodeBlock(part)
                       return (
                         <code
                           key={`${part.value}-${index}`}
