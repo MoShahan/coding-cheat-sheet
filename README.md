@@ -2,6 +2,8 @@
 
 Personal interview revision site-not a quiz. Skim short notes across frontend, backend, and databases whenever you need a quick refresh.
 
+**🚀 Live Demo:** [Open Coding Cheat Sheet](https://moshahan.github.io/coding-cheat-sheet/)
+
 License: [MIT](LICENSE)
 
 ![Coding Cheat Sheet app preview](docs/screenshots/app-preview.png)
