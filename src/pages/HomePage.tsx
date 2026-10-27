@@ -319,9 +319,9 @@ export function HomePage() {
                         : activeCategory.name}
                     </h2>
                   </div>
-                  <div className="flex shrink-0 flex-col items-end gap-2 max-md:flex-row max-md:flex-wrap max-md:items-center">
+                  <div className="flex shrink-0 items-center gap-2">
                     <p
-                      className="mt-[0.15rem] shrink-0 rounded-[10px] bg-accent-soft px-[0.7rem] py-[0.4rem] text-[0.82rem] font-bold whitespace-nowrap text-result-meta-fg max-md:m-0"
+                      className="m-0 shrink-0 rounded-[10px] bg-accent-soft px-[0.7rem] py-[0.4rem] text-[0.82rem] font-bold whitespace-nowrap text-result-meta-fg"
                       aria-live="polite"
                     >
                       <span className="tabular-nums">{visibleCount}</span>

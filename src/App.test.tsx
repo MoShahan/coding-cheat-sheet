@@ -121,15 +121,13 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
-  it('offers A4 cheat sheet downloads on a topic', () => {
+  it('offers a PDF cheat sheet download on a topic', () => {
     renderWithRouter(<App />)
 
+    expect(screen.getByRole('button', { name: /print pdf/i })).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /download html cheat sheet as png/i }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: /download html cheat sheet as pdf/i }),
-    ).toBeInTheDocument()
+      screen.queryByRole('button', { name: /png|image/i }),
+    ).not.toBeInTheDocument()
   })
 
   it('navigates to the JS playground', async () => {
