@@ -23,6 +23,8 @@ License: [MIT](LICENSE)
 
 **Databases:** MongoDB, PostgreSQL
 
+**ORMs:** Prisma, Drizzle
+
 **Playground:** `/playground` - run vanilla JavaScript in a browser console (link from the home hero).
 
 ## Scripts
@@ -53,4 +55,4 @@ Structure: **category → topic → questions**, where each question has:
 
 Notes sort by difficulty, then A-Z. Add a matching icon in `src/components/TopicVisual.tsx` when you create a new category type.
 
-Keep answers short and skim-friendly (a few bullets each). Run `npm run lint` and `npm test` before you open a PR.
+Keep answers as bullets (not paragraphs). A bullet can be one or two sentences so the meaning stays clear. Run `npm run lint` and `npm test` before you open a PR.

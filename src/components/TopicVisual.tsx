@@ -203,6 +203,22 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           <ellipse cx="40" cy="48" rx="16" ry="8" fill="none" stroke="#1d4ed8" strokeWidth="4" />
         </svg>
       )
+    case 'Prisma':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ccfbf1" />
+          <path d="M28 58V22l24 14-10 6 14 16-28-0z" fill="#0f766e" />
+          <path d="M28 22l24 14-10 6-14-20z" fill="#14b8a6" />
+        </svg>
+      )
+    case 'Drizzle':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#fef9c3" />
+          <path d="M32 18c0 14-10 18-10 28a10 10 0 0020 0c0-10-10-14-10-28z" fill="#ca8a04" />
+          <path d="M50 24c0 12-8 16-8 24a8 8 0 0016 0c0-8-8-12-8-24z" fill="#eab308" />
+        </svg>
+      )
     case 'Django':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
