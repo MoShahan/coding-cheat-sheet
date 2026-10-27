@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { categories } from '../data/questions'
+import { getAnswerDisplayParts } from '../lib/formatAnswer'
 
 import { CategoryPrintDocument } from './CategoryPrintDocument'
 
@@ -20,7 +21,10 @@ describe('CategoryPrintDocument', () => {
           screen.getByRole('heading', { name: item.question }),
         ).toBeInTheDocument()
         for (const line of item.answer) {
-          expect(screen.getByText(line)).toBeInTheDocument()
+          for (const part of getAnswerDisplayParts(line)) {
+            const text = part.value.replace(/\s+/g, ' ').trim()
+            if (text) expect(document.body).toHaveTextContent(text)
+          }
         }
       }
     }

@@ -19,13 +19,21 @@ License: [MIT](LICENSE)
 
 ## Topics
 
-**Frontend:** HTML, CSS, JavaScript, TypeScript, React, Vue, Angular, Browser & DOM, state, performance, network & security, testing
+**Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security, testing, Git hooks / Husky, PRs and commits
 
-**Backend & fullstack:** Node.js, Express, NestJS, Next.js, Django, Ruby on Rails
+**Backend & fullstack:** Node.js, Express, NestJS, Next.js, Python, Django, Flask, Ruby on Rails, Rust, Go
 
-**Databases:** MongoDB, PostgreSQL
+**Databases:** SQL, PostgreSQL, MongoDB, Redis
+
+**Files:** S3-style buckets, image and video uploads, what to store in the database
 
 **ORMs:** Prisma, Drizzle
+
+**Algorithms:** searching (linear, binary, jump), sorting (bubble, selection, insertion, merge, quick, heap)
+
+**Data structures:** arrays, stacks, queues, hash maps, linked lists, trees, graphs
+
+**DSA interview:** Big-O, time and space complexity classes, two pointers, sliding window, DP, greedy, backtracking, classic problems
 
 **Playground:** `/playground` - run vanilla JavaScript in a browser console (link from the home hero).
 

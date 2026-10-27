@@ -91,6 +91,40 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           <circle cx="40" cy="40" r="4" fill="#1d4ed8" />
         </svg>
       )
+    case 'RN':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ecfeff" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="20"
+            fontWeight="700"
+            fill="#0e7490"
+          >
+            RN
+          </text>
+        </svg>
+      )
+    case 'Flutter':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e0f2fe" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="20"
+            fontWeight="700"
+            fill="#0369a1"
+          >
+            Fl
+          </text>
+        </svg>
+      )
     case 'Vue':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
@@ -194,6 +228,20 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           <rect x="38" y="48" width="4" height="16" rx="2" fill="#14532d" />
         </svg>
       )
+    case 'SQL':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e0f2fe" />
+          <rect x="18" y="20" width="44" height="40" rx="6" fill="#0284c7" />
+          <rect x="18" y="20" width="44" height="10" rx="6" fill="#0369a1" />
+          <rect x="24" y="36" width="12" height="4" rx="1.5" fill="#e0f2fe" />
+          <rect x="40" y="36" width="16" height="4" rx="1.5" fill="#bae6fd" />
+          <rect x="24" y="44" width="12" height="4" rx="1.5" fill="#e0f2fe" />
+          <rect x="40" y="44" width="16" height="4" rx="1.5" fill="#bae6fd" />
+          <rect x="24" y="52" width="12" height="4" rx="1.5" fill="#e0f2fe" />
+          <rect x="40" y="52" width="16" height="4" rx="1.5" fill="#bae6fd" />
+        </svg>
+      )
     case 'Postgres':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
@@ -219,6 +267,23 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           <path d="M50 24c0 12-8 16-8 24a8 8 0 0016 0c0-8-8-12-8-24z" fill="#eab308" />
         </svg>
       )
+    case 'Python':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#fef3c7" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#ca8a04"
+          >
+            py
+          </text>
+        </svg>
+      )
     case 'Django':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
@@ -233,6 +298,23 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
             fill="#047857"
           >
             dj
+          </text>
+        </svg>
+      )
+    case 'Flask':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#f3f4f6" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#374151"
+          >
+            fl
           </text>
         </svg>
       )
@@ -251,6 +333,116 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           >
             RoR
           </text>
+        </svg>
+      )
+    case 'Rust':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ffedd5" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#c2410c"
+          >
+            rs
+          </text>
+        </svg>
+      )
+    case 'Go':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e0f2fe" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#0369a1"
+          >
+            Go
+          </text>
+        </svg>
+      )
+    case 'Algo':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ede9fe" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="20"
+            fontWeight="700"
+            fill="#6d28d9"
+          >
+            O(n)
+          </text>
+        </svg>
+      )
+    case 'DS':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e0e7ff" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#3730a3"
+          >
+            DS
+          </text>
+        </svg>
+      )
+    case 'DSA':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ffe4e6" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="18"
+            fontWeight="700"
+            fill="#9f1239"
+          >
+            DSA
+          </text>
+        </svg>
+      )
+    case 'Redis':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#fee2e2" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="16"
+            fontWeight="700"
+            fill="#b91c1c"
+          >
+            Rd
+          </text>
+        </svg>
+      )
+    case 'Files':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ffedd5" />
+          <path d="M22 34h36l-6 24H28L22 34z" fill="#ea580c" />
+          <path d="M28 28h16l4 6h16v6H22v-6h6z" fill="#c2410c" />
         </svg>
       )
     default:

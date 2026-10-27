@@ -392,7 +392,7 @@ export function HomePage() {
                       {topic.questions.map((item) => (
                         <li
                           key={item.id}
-                          className="border-0 border-b border-note-rule border-l-[3px] border-l-transparent py-[1.05rem] pr-0 pl-4 transition-[border-color,background] duration-200 ease-out-quart last:border-b-0 hover:border-l-accent-strong hover:bg-category-hover max-md:py-[0.95rem] max-md:pl-3"
+                          className="border-0 border-b border-note-rule py-[1.05rem] pr-0 pl-4 last:border-b-0 max-md:py-[0.95rem] max-md:pl-3"
                         >
                           <h4 className="mb-[0.7rem] font-display text-[1.12rem] leading-snug font-bold tracking-[-0.025em] text-ink [overflow-wrap:anywhere] max-md:text-[1.05rem]">
                             {item.question}

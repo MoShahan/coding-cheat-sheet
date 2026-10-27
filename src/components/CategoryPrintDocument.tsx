@@ -1,6 +1,7 @@
 import { type CSSProperties } from 'react'
 
 import { type Category, countQuestions } from '../data/questions'
+import { getAnswerDisplayParts, isCodeBlock } from '../lib/formatAnswer'
 
 import { TopicVisual } from './TopicVisual'
 
@@ -158,7 +159,38 @@ export function CategoryPrintDocument({ category }: CategoryPrintDocumentProps) 
                         background: '#2563eb',
                       }}
                     />
-                    {line}
+                    {getAnswerDisplayParts(line).map((part, index) => {
+                      if (part.type !== 'code') {
+                        return (
+                          <span key={`${part.value}-${index}`}>{part.value}</span>
+                        )
+                      }
+                      const block = isCodeBlock(part.value)
+                      return (
+                        <code
+                          key={`${part.value}-${index}`}
+                          style={{
+                            display: block ? 'block' : 'inline',
+                            margin: block ? '6px 0' : 0,
+                            padding: block ? '8px 10px' : '1px 5px',
+                            borderRadius: block ? '8px' : '4px',
+                            background: '#e4ebf4',
+                            color: '#16324f',
+                            fontFamily:
+                              'IBM Plex Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+                            fontSize: block ? '13px' : '0.86em',
+                            fontWeight: 500,
+                            lineHeight: 1.55,
+                            whiteSpace: 'pre-wrap',
+                            overflowWrap: 'break-word',
+                            wordBreak: 'normal',
+                            tabSize: 2,
+                          }}
+                        >
+                          {part.value}
+                        </code>
+                      )
+                    })}
                   </li>
                 ))}
               </ul>

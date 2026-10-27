@@ -64,7 +64,7 @@ describe('App', () => {
       }),
     )
 
-    expect(categoryButtons()[0]).toHaveAccessibleName(/angular:/i)
+    expect(categoryButtons()[0]).toHaveAccessibleName(/algo:/i)
     expect(
       within(nav).getByRole('button', {
         name: /sort categories by default order/i,
@@ -116,9 +116,7 @@ describe('App', () => {
         name: /difference between var, let, and const/i,
       }),
     ).toBeInTheDocument()
-    expect(
-      screen.getByText(/prefer const by default/i),
-    ).toBeInTheDocument()
+    expect(document.body.textContent).toMatch(/prefer const by default/i)
   })
 
   it('offers a PDF cheat sheet download on a topic', () => {

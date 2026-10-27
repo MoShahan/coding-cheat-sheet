@@ -5,6 +5,9 @@
 @theme inline {
   --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-muted: var(--muted);
@@ -60,6 +63,8 @@ html:not([data-theme]) {
   --hero-muted: rgba(247, 250, 252, 0.78);
   --note-rule: rgba(16, 24, 32, 0.08);
   --shell-shadow: 0 18px 50px rgba(16, 24, 32, 0.08);
+  --code-bg: #e4ebf4;
+  --code-fg: #16324f;
 }
 
 html[data-theme='dark'] {
@@ -93,6 +98,8 @@ html[data-theme='dark'] {
   --hero-ink: #f4f7fa;
   --hero-muted: rgba(244, 247, 250, 0.76);
   --note-rule: rgba(238, 242, 246, 0.1);
+  --code-bg: rgba(147, 197, 253, 0.14);
+  --code-fg: #dbeafe;
   --shell-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
 }
 
