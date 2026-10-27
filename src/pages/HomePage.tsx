@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import heroRevision from '../assets/hero-revision.jpg'
 import { AnswerNotes } from '../components/AnswerNotes'
+import { CheatSheetExport } from '../components/CheatSheetExport'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { TopicVisual } from '../components/TopicVisual'
 import {
@@ -318,15 +319,20 @@ export function HomePage() {
                         : activeCategory.name}
                     </h2>
                   </div>
-                  <p
-                    className="mt-[0.15rem] shrink-0 rounded-[10px] bg-accent-soft px-[0.7rem] py-[0.4rem] text-[0.82rem] font-bold whitespace-nowrap text-result-meta-fg max-md:m-0"
-                    aria-live="polite"
-                  >
-                    <span className="tabular-nums">{visibleCount}</span>
-                    {visibleCount === 1 ? ' note' : ' notes'}
-                    {normalized ? ' found' : ''}
-                    {searchingAll ? ` · ${resultGroups.length} topics` : ''}
-                  </p>
+                  <div className="flex shrink-0 flex-col items-end gap-2 max-md:flex-row max-md:flex-wrap max-md:items-center">
+                    <p
+                      className="mt-[0.15rem] shrink-0 rounded-[10px] bg-accent-soft px-[0.7rem] py-[0.4rem] text-[0.82rem] font-bold whitespace-nowrap text-result-meta-fg max-md:m-0"
+                      aria-live="polite"
+                    >
+                      <span className="tabular-nums">{visibleCount}</span>
+                      {visibleCount === 1 ? ' note' : ' notes'}
+                      {normalized ? ' found' : ''}
+                      {searchingAll ? ` · ${resultGroups.length} topics` : ''}
+                    </p>
+                    {panelCategory ? (
+                      <CheatSheetExport category={panelCategory} />
+                    ) : null}
+                  </div>
                 </div>
                 <p className="mt-2 mb-0 max-w-[44ch] text-muted max-md:max-w-none">
                   {searchingAll

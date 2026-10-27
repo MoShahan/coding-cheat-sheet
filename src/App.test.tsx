@@ -121,6 +121,17 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
+  it('offers A4 cheat sheet downloads on a topic', () => {
+    renderWithRouter(<App />)
+
+    expect(
+      screen.getByRole('button', { name: /download html cheat sheet as png/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /download html cheat sheet as pdf/i }),
+    ).toBeInTheDocument()
+  })
+
   it('navigates to the JS playground', async () => {
     const user = userEvent.setup()
     renderWithRouter(<App />)
