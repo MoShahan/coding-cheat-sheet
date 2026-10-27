@@ -2394,6 +2394,20 @@ export const categoryData: Category[] = [
             ],
             difficulty: 'medium',
           },
+          {
+            id: 'ex-8',
+            question:
+              'In Express middleware, what are req, res, next, and err, and when do you call each?',
+            answer: [
+              '`req` is the incoming request. Read `req.params`, `req.query`, `req.body` (after `express.json()`), headers, cookies. You can attach `req.user` for later layers. You do not call `req`.',
+              '`res` is the outgoing response. Call `res.status(200).json(...)`, `res.send()`, or `res.redirect()` when this layer is the one talking to the client. After you send, the request is done: do not call `next()`.',
+              '`next()` with no argument means “I am finished, keep going.” Call it after logging, parsing, or setting `req.user` so the next middleware or route can run. If you neither send nor `next()`, the request hangs.',
+              '`next(err)` means “this failed.” Express skips the remaining `(req, res, next)` functions and jumps to the first error handler. Call it on a bad token, a thrown DB error, or any failure you want one shared response for.',
+              '`err` is only on error middleware, which Express detects by arity: `(err, req, res, next)`. That `err` is whatever you passed to `next(err)`. Read `err.status` / `err.message`, log it, then `res.status(...).json(...)`. Call `next(err)` again only if this handler cannot finish.',
+              'Interview: one of three: answer with `res`, continue with `next()`, or fail with `next(err)`. Never both `res.json()` and `next()` (headers already sent).',
+            ],
+            difficulty: 'medium',
+          },
         ],
       },
     ],
