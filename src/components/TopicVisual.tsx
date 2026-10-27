@@ -178,6 +178,15 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           </text>
         </svg>
       )
+    case 'Backend':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e2e8f0" />
+          <rect x="18" y="20" width="44" height="10" rx="3" fill="#334155" />
+          <rect x="18" y="35" width="44" height="10" rx="3" fill="#475569" />
+          <rect x="18" y="50" width="44" height="10" rx="3" fill="#64748b" />
+        </svg>
+      )
     case 'Express':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>

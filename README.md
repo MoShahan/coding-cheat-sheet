@@ -19,9 +19,9 @@ License: [MIT](LICENSE)
 
 ## Topics
 
-**Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security, testing, Git hooks / Husky, PRs and commits
+**Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security, testing, linting (ESLint, Oxlint), Git hooks / Husky, PRs and commits, CI/CD and GitHub Actions
 
-**Backend & fullstack:** Node.js, Express, NestJS, Next.js, Python, Django, Flask, Ruby on Rails, Rust, Go
+**Backend & fullstack:** Node.js, common backend layering (MVC, repository, service), Express, NestJS, Next.js, Python, Django, Flask, Ruby on Rails, Rust, Go
 
 **Databases:** SQL, PostgreSQL, MongoDB, Redis
 
@@ -55,7 +55,7 @@ Want to add questions? Fork the repo, add your notes, and open a pull request. H
 
 ## Adding notes
 
-Edit `src/data/questions.ts`.
+Edit `src/data/questionData.ts`. Types and sort helpers live in `src/data/questionUtils.ts`.
 
 Structure: **category → topic → questions**, where each question has:
 
