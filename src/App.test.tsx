@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderWithRouter } from './test/renderWithRouter'
 import App from './App'
@@ -126,6 +126,19 @@ describe('App', () => {
     expect(
       screen.queryByRole('button', { name: /png|image/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('scrolls to the top from the floating button', async () => {
+    const user = userEvent.setup()
+    const scrollTo = vi
+      .spyOn(window, 'scrollTo')
+      .mockImplementation(() => undefined)
+    renderWithRouter(<App />)
+
+    await user.click(screen.getByRole('button', { name: /scroll to top/i }))
+
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+    scrollTo.mockRestore()
   })
 
   it('navigates to the JS playground', async () => {

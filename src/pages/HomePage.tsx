@@ -117,7 +117,7 @@ export function HomePage() {
   const panelCategory = searchingAll ? null : activeCategory
 
   return (
-    <div className="mx-auto w-[min(1180px,calc(100%-2rem))] pt-5 pb-[max(4.5rem,calc(2.5rem+env(safe-area-inset-bottom)))] pl-[max(0px,env(safe-area-inset-left))] pr-[max(0px,env(safe-area-inset-right))] max-md:w-[min(100%-1rem,1180px)] max-md:pt-3 max-md:pb-[max(2.75rem,calc(1.5rem+env(safe-area-inset-bottom)))] max-sm:w-full max-sm:px-0 max-sm:pt-0 max-sm:pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+    <div className="mx-auto w-[min(1180px,calc(100%-2rem))] pt-5 pb-[max(4.5rem,calc(2.5rem+env(safe-area-inset-bottom)))] pl-[max(0px,env(safe-area-inset-left))] pr-[max(0px,env(safe-area-inset-right))] max-md:w-[min(100%-1rem,1180px)] max-md:pt-3 max-md:pb-[max(4.25rem,calc(3.25rem+env(safe-area-inset-bottom)))] max-sm:w-full max-sm:px-0 max-sm:pt-0 max-sm:pb-[max(4rem,calc(3rem+env(safe-area-inset-bottom)))]">
       <header className="animate-hero-in relative isolate mb-7 min-h-[min(62svh,520px)] overflow-hidden rounded-[28px] border border-line max-md:mb-4 max-md:min-h-0 max-md:rounded-[20px] max-sm:mb-3 max-sm:rounded-none max-sm:border-x-0 max-sm:border-t-0">
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <img

@@ -40,7 +40,7 @@ export function PlaygroundPage() {
   }
 
   return (
-    <div className="mx-auto w-[min(1180px,calc(100%-2rem))] pt-5 pb-[max(3rem,calc(1.5rem+env(safe-area-inset-bottom)))] max-md:w-[min(100%-1rem,1180px)]">
+    <div className="mx-auto w-[min(1180px,calc(100%-2rem))] pt-5 pb-[max(4.25rem,calc(3.25rem+env(safe-area-inset-bottom)))] max-md:w-[min(100%-1rem,1180px)]">
       <header className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="mb-1 text-[0.7rem] font-bold tracking-[0.1em] text-accent-strong uppercase">
