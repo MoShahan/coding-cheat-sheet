@@ -1929,7 +1929,7 @@ export const categoryData: Category[] = [
     id: 'network',
     type: 'Network',
     name: 'Network & Security',
-    blurb: 'HTTP, WebSockets, CORS, OAuth, and common web threats.',
+    blurb: 'HTTP, WebSockets, CORS, OAuth, JWT, and common web threats.',
     topics: [
       {
         id: 'net-http',
@@ -2126,6 +2126,56 @@ export const categoryData: Category[] = [
         ],
       },
       {
+        id: 'net-jwt',
+        title: 'JWT',
+        questions: [
+          {
+            id: 'nt-22',
+            question: 'What is a JWT?',
+            answer: [
+              'JSON Web Token: a compact, signed string the client sends to prove who they are (and sometimes what they may do).',
+              'It is three Base64URL pieces joined by dots: `header.payload.signature`. You can decode the middle part; anyone can read it. The signature is what stops tampering.',
+              'Typical use: after login the server issues a JWT. The client sends `Authorization: Bearer <jwt>` on later calls. The API verifies the signature and `exp` without a session table.',
+              'A JWT is not encrypted by default (that is JWE). Do not put passwords or secrets in the payload. HTTPS still matters.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'nt-25',
+            question: 'What are the three parts of a JWT?',
+            answer: [
+              'Header: JSON like `{ "alg": "HS256", "typ": "JWT" }`. Says how it was signed (HMAC secret vs RSA/ECDSA key).',
+              'Payload: claims. Registered ones you will see: `sub` (user id), `iat` (issued at), `exp` (expiry), `iss` (issuer), `aud` (audience). You can add `role`, `email`.',
+              'Signature: the hash of `base64url(header) + "." + base64url(payload)` with the secret or private key. If the payload changes, verification fails.',
+              'Look at one on jwt.io. If you can read the payload in the browser, that is expected - signing ≠ hiding.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'nt-23',
+            question: 'How is a JWT created and verified?',
+            answer: [
+              'Create: build header + claims (include `exp`). Base64URL-encode both. Sign `header.payload` with HMAC-SHA256 and a server secret (HS256), or with a private key (RS256/ES256). Concatenate `header.payload.signature`.',
+              'Libraries do this (`jsonwebtoken`, `jose`). Do not hand-roll Base64 or HMAC in an interview unless they ask.',
+              'Verify: split on `.`, decode header/payload, recompute the signature with the same secret (or the public key for RS256), compare, then reject if `exp` is past (and check `iss`/`aud` if you set them).',
+              'The API does not need to store the token. If verification passes, trust `sub` and the claims. Logout is “stop sending it” plus a short `exp` - or a denylist if you must revoke early.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'nt-24',
+            question: 'What are the benefits of JWTs?',
+            answer: [
+              'Stateless: any server that has the secret/public key can verify. No sticky session store for “is this token valid?” on every request. Easy to scale horizontally.',
+              'Works the same for SPAs, mobile, and service-to-service. The client just sends a header; it is not tied to browser cookies.',
+              'The payload can carry user id and roles, so you skip an extra “load session” DB hit on every call (keep the payload small).',
+              'Standard (RFC 7519), compact, URL-safe. Tradeoff: harder to revoke than a server session, and the payload is readable. Pair with short access tokens + refresh tokens.',
+            ],
+            difficulty: 'easy',
+          },
+        ],
+      },
+      {
         id: 'net-auth',
         title: 'Auth tokens & sessions',
         questions: [
@@ -2172,6 +2222,66 @@ export const categoryData: Category[] = [
               'Cookie session auth is not Bearer. An API key in a header is the same idea with a different name.',
             ],
             difficulty: 'easy',
+          },
+          {
+            id: 'nt-26',
+            question:
+              'What is a refresh token, and why use one instead of a long-lived access token?',
+            answer: [
+              'A refresh token is a longer-lived secret used only to mint a new access token. You send it to `/refresh` or the token endpoint, not as `Authorization` on every GET /users.',
+              'Access tokens stay short (minutes). If one leaks (XSS, log, stolen laptop), the window is small. The refresh token stays off API traffic, often in an HttpOnly cookie or on the server.',
+              'The auth server can revoke refresh tokens (logout, password change, stolen device). Access tokens then die when they expire. You cannot cheaply revoke a JWT access token that you never stored.',
+              'Without a refresh token you either nag the user to log in every 15 minutes, or you issue a week-long access token that a thief can use until it expires.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'nt-27',
+            question:
+              'Why is an access token used, and what happens if you skip refresh tokens?',
+            answer: [
+              'The access token is the “ticket” on each API call: short-lived, sent as Bearer, checked on every request. That is the thing you actually authorize against.',
+              'Keep it short so a leak is not a long takeover. Typical: 5-15 minutes, sometimes up to an hour for first-party apps.',
+              'Skip refresh tokens and you have two bad options: short access → user re-logs constantly; long access → stolen token works for days, and logout cannot kill it.',
+              'With refresh: access stays short, the session can last days, and you can rotate/revoke the refresh token. On 401, the client refreshes once, retries, or sends them to login.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'nt-30',
+            question:
+              'Login already gives a new access token. Why not just request a new access token directly, without a refresh token?',
+            answer: [
+              'Login proves the password (or OAuth consent). That is how you get the first access token. You could log in again every 15 minutes - that is the point: nobody wants to type the password on every expiry.',
+              '“Just give me a new access token” still needs a secret. If the *old* access token is enough to mint a new one, expiry is fake: a thief with that JWT stays logged in forever. If `/refresh` needs no secret at all, anyone can mint tokens.',
+              'The refresh token *is* that secret. It is not sent on GET /users, so it is not in every log and XSS hole the access token sits in. The server can revoke it on logout. An access JWT you never stored cannot be killed the same way.',
+              'Two jobs, two tokens: access = call the API (short, everywhere). Refresh = extend the session without the password (long, rare, revocable). Logout + login is the fallback when refresh is gone, not the happy path.',
+            ],
+            difficulty: 'hard',
+          },
+          {
+            id: 'nt-28',
+            question:
+              'How long do access tokens and refresh tokens usually last?',
+            answer: [
+              'Access token: minutes. Common defaults are 5-15 minutes; some products use 30-60 minutes. OAuth access tokens from Google/GitHub are often about an hour.',
+              'Refresh token: days to weeks. First-party apps often use 7-30 days, sometimes 90. Banks and high-risk apps go shorter and re-prompt.',
+              'There is no RFC that says “must be 15 minutes.” Interview answer: access short enough that theft is limited; refresh long enough that UX is acceptable, stored more carefully, rotatable.',
+              'Sliding sessions: each successful refresh can issue a new refresh token and push expiry out. Absolute timeout still caps “stay logged in forever.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'nt-29',
+            question:
+              'How does a typical access + refresh token flow work after login?',
+            answer: [
+              'Login (or OAuth `/token`) returns an access token and a refresh token. Client keeps access in memory; refresh in HttpOnly cookie or secure storage, not next to it in localStorage if you can avoid that.',
+              'API calls send only the access token. When it expires, the API returns 401.',
+              'The client POSTs the refresh token to `/refresh`. Server checks it (and rotation/reuse), then returns a new access token (and often a new refresh token). Retry the original call.',
+              'If refresh fails (revoked, expired, reused): clear tokens, send the user to login. Do not refresh in a loop.',
+            ],
+            difficulty: 'medium',
           },
           {
             id: 'nt-21',
@@ -2272,7 +2382,8 @@ export const categoryData: Category[] = [
     id: 'backend',
     type: 'Backend',
     name: 'Backend',
-    blurb: 'Shared API layering: MVC, models, repositories, services, and controllers.',
+    blurb:
+      'Shared API layering, HTTP status codes, request validation, and API security.',
     topics: [
       {
         id: 'backend-layers',
@@ -2302,6 +2413,152 @@ export const categoryData: Category[] = [
               'Model = data and rules. View = UI or template. Controller = glue (an HTTP handler, or a UI event handler). Repository/service folders are MVC plus an extra data layer.',
             ],
             difficulty: 'easy',
+          },
+        ],
+      },
+      {
+        id: 'backend-status',
+        title: 'HTTP status codes',
+        questions: [
+          {
+            id: 'be-3',
+            question:
+              'What are the HTTP status code families, and when does an API send each?',
+            answer: [
+              '2xx: the request was understood and handled. 200 with a body, 201 after a create, 204 when there is nothing to return.',
+              '3xx: look somewhere else. 301/302 redirects, 304 Not Modified for caches. Your JSON API rarely invents these; a CDN or static host often does.',
+              '4xx: the client should change the request. Bad JSON, missing login, no permission, wrong id, conflict with current data.',
+              '5xx: we failed. A bug, a dead database, a gateway timeout. The request might be fine; retry later, do not “fix the body.”',
+              '1xx is almost never from your handler (101 is the WebSocket upgrade). Never hide a failure behind 200 + `{ error: true }`.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'be-4',
+            question:
+              'GET /users/:id: which status if the user is missing, vs if something else blew up?',
+            answer: [
+              '200 + the user when the row exists and this caller may see it.',
+              '404 when that id is not in the database. Same 404 if you hide private users so attackers cannot probe who exists.',
+              '400 if `:id` is not a valid id (not a UUID, not a number) - you never even queried.',
+              '401 if there is no session/token; 403 if they are logged in but cannot view this user (another person’s private profile).',
+              '500 if the handler crashed: SQL syntax error, null dereference, DB connection dropped. That is not “user not found.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'be-5',
+            question:
+              '401 vs 403: not authenticated vs authenticated but not authorized?',
+            answer: [
+              '401 means we do not know who you are: missing, expired, or invalid token/cookie. The name “Unauthorized” is a historical mess; think “unauthenticated.”',
+              '403 means we know who you are, and you still cannot do this: not an admin, not the owner, feature flagged off.',
+              'Wrong login should not be 403 - the client would not know to send credentials. Wrong permission should not be 401 - they would try to log in again as the same user.',
+              'Typical GET /users/:id: no Bearer header → 401. Logged in as Bob, asking for Alice’s admin-only record → 403. No such user → 404.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-6',
+            question:
+              'PATCH /users/:id: the user exists, but the update still fails. Which status?',
+            answer: [
+              '200 (updated user in the body) or 204 (no body) when the write succeeds.',
+              '400 or 422 when the JSON is present but invalid: missing `email`, `age: "fish"`, password too short. 422 is the more precise “semantically wrong” code; many APIs just use 400.',
+              '409 Conflict when the request is valid but clashes with current state: email already taken, or an ETag/version mismatch (someone else saved first).',
+              '403 if they can see the user but cannot edit them; 404 if the id is gone. 401 still applies if the token is missing.',
+              '500 if you loaded the user, then the DB threw on save (constraint you did not map, connection died). Do not call that 404.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-7',
+            question: 'When do you send 200, 201, and 204?',
+            answer: [
+              '200 OK: success with a representation. GET one/list, or PUT/PATCH that returns the new resource.',
+              '201 Created: POST made a new resource. Point at it with a `Location` header (`/users/42`) and usually return the created body.',
+              '204 No Content: success, empty body. Common for DELETE, or a PATCH/PUT that the client already has.',
+              'Do not 201 a GET. Do not 204 a GET that found data. Do not 200 a create if clients need to know a new id was minted.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'be-8',
+            question: '400 vs 422 vs 409 vs 404: which client error, and why?',
+            answer: [
+              '400 Bad Request: we cannot even process it. Broken JSON, wrong Content-Type, `:id` is not an id.',
+              '422 Unprocessable Entity: JSON parsed, types look fine, business rules failed (`endDate` before `startDate`, username taken at validation time). Optional; 400 is acceptable if the whole API is consistent.',
+              '409 Conflict: well-formed request, current server state says no. Duplicate unique key on insert, “order already shipped,” If-Match failed.',
+              '404 Not Found: this URL does not map to a resource (or you are hiding that it does). Wrong path or unknown id, not a validation problem on a known row.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-9',
+            question: 'When is it 500 vs 502 vs 503 vs 504?',
+            answer: [
+              '500 Internal Server Error: your code threw. Syntax error, unhandled exception, bug after you accepted a valid request. Log it; return a generic message, not the stack, to clients.',
+              '502 Bad Gateway: a proxy in front (nginx, API gateway) got a dead or invalid response from your app process.',
+              '503 Service Unavailable: overloaded, deploying, circuit breaker open. Send `Retry-After` when you can.',
+              '504 Gateway Timeout: upstream (app, DB via a gateway) did not answer in time.',
+              'Retry 502/503/504 with backoff. Do not retry 400/401/403/404. Retry 500 at most once - it might be a poison payload.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-10',
+            question:
+              'What other status codes show up in APIs besides 200/400/401/403/404/500?',
+            answer: [
+              '304 Not Modified: GET with If-None-Match / If-Modified-Since; body omitted, cache is still good.',
+              '405 Method Not Allowed: POST to a GET-only URL. Include `Allow: GET, HEAD`. 415 if Content-Type is not JSON. 413 if the body is too large.',
+              '409 Conflict and 410 Gone: state clash vs “this used to exist, never coming back” (deleted account you do not want treated as a generic 404).',
+              '429 Too Many Requests: rate limit. Include Retry-After. 301/302 are redirects, not API errors.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-11',
+            question:
+              'Walk through GET and PATCH /users/:id: which status for each outcome?',
+            answer: [
+              'No/expired token on either verb → 401. Logged in but not allowed to read or edit that user → 403.',
+              'GET, id unknown → 404. GET, found → 200 + user. GET, DB/code crash → 500.',
+              'PATCH, id unknown → 404. PATCH, body unreadable → 400. PATCH, rules fail (bad email) → 400 or 422. PATCH, email already owned by someone else → 409.',
+              'PATCH, write succeeds → 200 + user or 204. PATCH, found the row then the DB exploded → 500, not 404.',
+              'Interview: name the check order too: authenticate → authorize → parse/validate → load resource → apply business rules → write. First failure wins; do not leak 500 when 401 would do.',
+            ],
+            difficulty: 'hard',
+          },
+        ],
+      },
+      {
+        id: 'backend-security',
+        title: 'Validation & security',
+        questions: [
+          {
+            id: 'be-12',
+            question:
+              'How do you verify a request body on the backend? Why not trust it, and what modules do people use?',
+            answer: [
+              'Never trust `req.body`. Browser checks are UX only. curl, Postman, or a modified client can send extra fields, the wrong types, or a 50MB payload.',
+              'Parse JSON first (`express.json()`, Nest body parser). Then validate shape: required keys, types, enums, min/max, string length. Strip unknown keys so `{ "role": "admin" }` cannot sneak through.',
+              'Common libraries: Zod or Joi (Node/TS), express-validator, Nest `ValidationPipe` + class-validator, Pydantic (FastAPI), Django serializers / DRF, Laravel Form Requests, Rails strong params + model validations. One schema, reuse it in the handler.',
+              'On failure return 400 or 422 with field errors. Do not hit the DB. Also validate `params` and `query`, not only the body. Never concatenate the body into SQL - use the ORM or bound parameters.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-13',
+            question:
+              'What security work do you do on a backend API (CORS, headers, injection, and the rest)?',
+            answer: [
+              'HTTPS everywhere. Helmet (or equivalent headers): CSP, X-Content-Type-Options, frame deny. Limit body size. Keep secrets in env, not in git or logs. Do not return stack traces to clients.',
+              'CORS: allowlist real frontends, not `*`, especially if cookies are involved. CORS is a browser rule - it does not stop curl, so it is not auth.',
+              'Authenticate then authorize on every mutating route. Ignore a `userId` in the body for “who am I” - take it from the token/session. Rate limit (express-rate-limit, nginx) and return 429.',
+              'Injection: parameterized queries / ORM, never string-built SQL or `$where`. Cookie sessions need CSRF (SameSite + token). XSS: do not reflect unsanitized HTML. Uploads: type, size, and store outside the URL tree.',
+            ],
+            difficulty: 'medium',
           },
         ],
       },
