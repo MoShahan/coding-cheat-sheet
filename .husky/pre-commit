@@ -1,1 +1,5 @@
-npx lint-staged
+npx lint-staged || {
+  echo ""
+  echo "Pre-commit lint failed after auto-fix. Remaining errors cannot be fixed automatically - see the ESLint output above."
+  exit 1
+}

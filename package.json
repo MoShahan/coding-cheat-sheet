@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint"
+    "*.{ts,tsx}": "eslint --fix"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",

@@ -15,6 +15,7 @@ const noEmDashPlugin = {
         docs: {
           description: 'Disallow em dashes and en dashes; use a normal hyphen (-).',
         },
+        fixable: 'code',
         schema: [],
       },
       create(context) {
@@ -32,6 +33,12 @@ const noEmDashPlugin = {
                 },
                 message:
                   'Use a normal hyphen (-) instead of an em dash or en dash.',
+                fix(fixer) {
+                  return fixer.replaceTextRange(
+                    [index, index + match[0].length],
+                    '-',
+                  )
+                },
               })
             }
           },
