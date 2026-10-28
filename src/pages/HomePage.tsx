@@ -251,9 +251,10 @@ export function HomePage() {
                   <button
                     type="button"
                     className={cn(
-                      'flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border-0 bg-transparent px-[0.7rem] py-[0.65rem] text-left font-semibold text-ink-soft transition-[background,color] duration-200 ease-out-quart hover:bg-category-hover hover:text-ink max-md:min-h-11 max-md:shrink-0 max-md:whitespace-nowrap max-md:[scroll-snap-align:start]',
-                      isActive &&
-                        'bg-category-active-bg text-category-active-fg',
+                      'flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border px-[0.7rem] py-[0.65rem] text-left font-semibold transition-[background,color,border-color] duration-200 ease-out-quart max-md:min-h-11 max-md:shrink-0 max-md:whitespace-nowrap max-md:[scroll-snap-align:start]',
+                      isActive
+                        ? 'border-accent-strong bg-accent-soft text-ink'
+                        : 'border-transparent bg-transparent text-ink-soft hover:bg-category-hover hover:text-ink',
                     )}
                     onClick={() => handleCategoryChange(category.id)}
                     aria-current={isActive ? 'true' : undefined}
@@ -262,11 +263,7 @@ export function HomePage() {
                     <span className="flex min-w-0 items-center gap-2.5">
                       <TopicVisual
                         type={category.type}
-                        className={cn(
-                          'h-[1.85rem] w-[1.85rem] shrink-0 rounded-lg max-[380px]:h-6 max-[380px]:w-6',
-                          isActive &&
-                            'outline outline-1 outline-sky-300/50',
-                        )}
+                        className="h-[1.85rem] w-[1.85rem] shrink-0 rounded-lg max-[380px]:h-6 max-[380px]:w-6"
                       />
                       <span className="min-w-0 font-display text-[0.95rem] font-bold tracking-[-0.02em] max-[380px]:text-[0.88rem]">
                         {category.type}
@@ -274,9 +271,8 @@ export function HomePage() {
                     </span>
                     <span
                       className={cn(
-                        'min-w-6 shrink-0 text-center text-xs font-bold tabular-nums opacity-65',
-                        isActive &&
-                          'text-category-active-count opacity-100',
+                        'min-w-6 shrink-0 text-center text-xs font-bold tabular-nums',
+                        isActive ? 'text-accent-strong' : 'opacity-65',
                       )}
                     >
                       {countQuestions(category)}
