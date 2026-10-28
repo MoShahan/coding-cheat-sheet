@@ -27,6 +27,7 @@ describe('App', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: 'HTML' }),
     ).toBeInTheDocument()
+    expect(screen.queryByText(/^9 notes$/)).not.toBeInTheDocument()
   })
 
   it('toggles between light and dark theme', async () => {
@@ -72,29 +73,32 @@ describe('App', () => {
     ).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('searches across all categories when enabled', async () => {
+  it('searches all topics and shows match counts on category tabs', async () => {
     const user = userEvent.setup()
     renderWithRouter(<App />)
 
-    await user.click(
-      screen.getByRole('switch', { name: /search all categories/i }),
-    )
     await user.type(
-      screen.getByRole('searchbox', { name: /search in all topics/i }),
+      screen.getByRole('searchbox', { name: /search all topics/i }),
       'closure',
     )
 
+    const nav = screen.getByRole('navigation', { name: /topic types/i })
     expect(
-      screen.getByRole('heading', {
-        level: 2,
-        name: /results across topics/i,
-      }),
+      within(nav).getByRole('button', { name: /html: html, 0 notes/i }),
     ).toBeInTheDocument()
+    expect(
+      within(nav).getByRole('button', { name: /js: javascript, [1-9]/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('switch', { name: /search all categories/i }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/^\d+ notes( found)?$/)).not.toBeInTheDocument()
+
+    await user.click(
+      within(nav).getByRole('button', { name: /js: javascript/i }),
+    )
     expect(
       screen.getByRole('heading', { name: /what is a closure/i }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', { level: 3, name: 'JavaScript' }),
     ).toBeInTheDocument()
   })
 
