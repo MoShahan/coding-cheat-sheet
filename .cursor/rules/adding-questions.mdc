@@ -1,0 +1,40 @@
+---
+description: Add or edit cheat-sheet interview questions (category placement, bullet answers, code fences)
+globs: src/data/questionData.ts
+alwaysApply: true
+---
+
+# Adding questions
+
+Edit `src/data/questionData.ts` only. Types live in `questionUtils.ts`. Do not add a new category unless no existing one fits; a new `type` also needs an icon in `TopicVisual.tsx`.
+
+## Place the note
+
+- Put it in the **matching category**, then the matching **topic** (React architecture ≠ React hooks; Babel ≠ Angular components).
+- Add a topic only when the theme is new inside that category.
+- Reuse the category id prefix (`re-`, `be-`, `ng-`, `br-`, `te-`, …) and the next unused number. Do not duplicate a prompt that already exists; extend or add a follow-up instead.
+
+## Answer shape
+
+- `answer` is `string[]` bullets (usually **4**). Each bullet is **one or two sentences**: enough to use in an interview, never a paragraph, never a stub.
+- `difficulty`: `easy` | `medium` | `hard`. Sort is automatic (easy → hard, then A–Z).
+- Match the voice of neighboring notes. A short “Interview: …” line on the last bullet is fine.
+
+## Code
+
+- If an API, config, or transform is easier to show than to describe, **include code**.
+- Mark it yourself. Inline: `` `navigator.serviceWorker.register("/sw.js")` ``. Blocks: a fenced string with real newlines:
+
+```ts
+'```\nfunction debounce(fn, ms) {\n  let t\n  return (...a) => {\n    clearTimeout(t)\n    t = setTimeout(() => fn(...a), ms)\n  }\n}\n```'
+```
+
+- Format the snippet as real code (indentation, quotes, no `…` that would not compile unless the bullet says it is a sketch).
+
+## Checklist
+
+- [ ] Right category and topic
+- [ ] Unique `id`, one clear `question`
+- [ ] Bullets, not a paragraph; not too thin to understand
+- [ ] Code fenced/backticked where it helps
+- [ ] `npm run lint` and `npm test` before a PR
