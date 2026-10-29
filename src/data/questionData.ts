@@ -1011,6 +1011,30 @@ export const categoryData: Category[] = [
             ],
             difficulty: 'medium',
           },
+          {
+            id: 'ng-9',
+            question:
+              'What converts Angular code into something the browser can run?',
+            answer: [
+              'Browsers run HTML, CSS, and JavaScript. They do not run TypeScript, `@Component` metadata, or `{{ name }}` templates as-is.',
+              'The Angular compiler (Ivy) turns templates and decorators into JS render instructions. TypeScript (or esbuild) strips types from `.ts`.',
+              'The CLI builder then bundles that JS and emits static files (`ng build` → `dist/`). Older apps used the webpack builder; new apps use the `application` builder (esbuild, Vite for serve).',
+              'Interview: “Ivy + TypeScript compile, then a bundler packages it. Babel is optional polyfill glue, not the Angular compiler.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'ng-10',
+            question:
+              'What is an Angular builder, and what is the webpack builder?',
+            answer: [
+              'A builder is the CLI plugin behind a target in `angular.json`. `ng build` / `ng serve` / `ng test` each name a builder; you can swap or add custom ones.',
+              'The classic webpack builder is `@angular-devkit/build-angular:browser`. Webpack walks the graph, runs loaders, and writes bundles. Custom webpack plugins still show up in older apps.',
+              "New apps default to `@angular-devkit/build-angular:application` (esbuild; Vite for dev). Faster, less webpack config. You migrate when you no longer need a webpack-only plugin.",
+              "```\n\"architect\": {\n  \"build\": {\n    \"builder\": \"@angular-devkit/build-angular:application\"\n  }\n}\n``` Interview: “builder = how `ng build` works. Webpack builder = the old pipeline.”",
+            ],
+            difficulty: 'medium',
+          },
         ],
       },
     ],
@@ -1250,6 +1274,28 @@ export const categoryData: Category[] = [
               'Why: separate teams ship on their own cadence, you can migrate a legacy app piece by piece, or keep a second framework in one shell. Skip it for a small team and one repo.',
               'How: a host/shell loads remotes. Common tools are webpack Module Federation (also Vite/Rspack), single-spa, Next multi-zones, or iframes/web components.',
               'You still share auth, routing, design tokens, and error boundaries. Cost: duplicate deps, CSS clashes, and more ops. Interview: “independent deploy of UI slices, not a folder in a monolith.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 're-35',
+            question: 'How are multiple microfrontends connected?',
+            answer: [
+              'A host/shell owns the page chrome (header, auth, router) and loads remotes at runtime. Each remote is a separate build and deploy; they are not folders compiled into one bundle.',
+              'Module Federation (webpack/Rspack, Vite plugins too): a remote exposes modules, the host imports them like packages. single-spa mounts apps on routes. iframes or web components isolate CSS. Next.js multi-zones split by URL.',
+              "```\nnew ModuleFederationPlugin({\n  name: \"host\",\n  remotes: {\n    checkout: \"checkout@https://checkout.example.com/remoteEntry.js\",\n  },\n})\n\nconst Cart = lazy(() => import(\"checkout/Cart\"))\n```",
+              'Share auth, design tokens, and an error boundary in the host. Pin shared libs (`react`) so you do not load two Reacts. Interview: “one composition root, independently deployed slices.”',
+            ],
+            difficulty: 'hard',
+          },
+          {
+            id: 're-36',
+            question: 'What is the difference between a microfrontend and a microservice?',
+            answer: [
+              'A microservice splits the backend: orders, billing, identity each run as their own process (often their own database).',
+              'A microfrontend splits the UI: checkout, admin, catalog each build and deploy their own frontend, then compose in a shell.',
+              'You can have one without the other: a monolith API behind federated UIs, or many services behind one React app. Do not assume they come as a pair.',
+              'Interview: “microservices = server boundaries; microfrontends = UI deploy boundaries.” Connecting either is a network/contract problem, not a folder rename.',
             ],
             difficulty: 'medium',
           },
@@ -1615,6 +1661,34 @@ export const categoryData: Category[] = [
               'Browsers block a page from reading another origin’s DOM, storage, and most responses. That is the same-origin policy.',
               'You can still embed images and scripts from other origins; you just cannot read their contents from JS (except CORS-enabled fetches).',
               'CORS is the server opt-in that lets fetch/XHR read a cross-origin response. postMessage is the explicit way for windows to talk.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'browser-offline',
+        title: 'Service workers & offline',
+        questions: [
+          {
+            id: 'br-8',
+            question: 'What is a service worker?',
+            answer: [
+              'A service worker is a JavaScript file the browser runs in the background, off the page. It can intercept `fetch`, cache responses, and handle push notifications.',
+              'It has no DOM (`window` / `document` are missing). It wakes on events: `install`, `activate`, `fetch`, `push`. HTTPS is required (localhost is allowed).',
+              'It is the engine behind PWAs (offline, installable, faster repeat visits). It is not a Web Worker: `new Worker()` is for CPU off the main thread, not for network proxying.',
+              'Interview: “a programmable network proxy between the page and the network, with its own lifecycle.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'br-9',
+            question: 'Why use a service worker, and how do you register one?',
+            answer: [
+              'Why: cache-first static assets (faster reloads), an offline fallback page, background sync, or web push. Skip it for a simple site that always needs the network.',
+              "```\nif (\"serviceWorker\" in navigator) {\n  window.addEventListener(\"load\", () => {\n    navigator.serviceWorker.register(\"/sw.js\")\n  })\n}\n``` Same origin; `/sw.js` at the root so its scope can cover the app.",
+              "```\nself.addEventListener(\"fetch\", (event) => {\n  event.respondWith(\n    caches.match(event.request).then((hit) => hit || fetch(event.request))\n  )\n})\n``` Bump the cache name on deploy and delete old caches in `activate`.",
+              'A broken worker can brick the site (users keep getting old JS). Always have a way to unregister. Interview: “register once; the worker then owns network strategy.”',
             ],
             difficulty: 'medium',
           },
@@ -2559,6 +2633,47 @@ export const categoryData: Category[] = [
               'Injection: parameterized queries / ORM, never string-built SQL or `$where`. Cookie sessions need CSRF (SameSite + token). XSS: do not reflect unsanitized HTML. Uploads: type, size, and store outside the URL tree.',
             ],
             difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'backend-microservices',
+        title: 'Microservices',
+        questions: [
+          {
+            id: 'be-14',
+            question:
+              'What is a microservice, why use one, and how do you use it?',
+            answer: [
+              'A microservice is a small backend that owns one business job (orders, billing, identity). It runs as its own process, is deployed on its own cadence, and often has its own database.',
+              'Why: teams ship without blocking each other, you scale the hot service instead of the whole monolith, and a crash stays isolated. Skip it for a small team and one domain - you pay in network hops, ops, and distributed transactions.',
+              'How: split by capability, not by “one class = one service.” Each service exposes HTTP or gRPC, runs in containers, and is owned by one team. Start from a modular monolith if you are not sure.',
+              'Interview: “independently deployable services around a business capability - not a folder of Express routers in one process.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'be-15',
+            question: 'How are multiple microservices connected?',
+            answer: [
+              'Sync: HTTP REST or gRPC. An API gateway (nginx, Kong, AWS API Gateway) is the front door; browsers rarely call every service directly.',
+              "```\nconst user = await fetch(\n  `${process.env.USERS_URL}/users/${id}`,\n  { headers: { Authorization: req.headers.authorization } },\n).then((r) => r.json())\n``` Keep timeouts, retries, and a correlation id on these calls.",
+              'Async: a broker (Kafka, RabbitMQ, SQS). Orders publishes `OrderPaid`; shipping consumes it. Loose coupling, eventual consistency - no shared database writes.',
+              'Discovery is DNS (Kubernetes), Consul, or the gateway’s list. Interview: “gateway + HTTP for request/response; events for ‘something happened.’ Avoid a dozen sync calls on one click.”',
+            ],
+            difficulty: 'hard',
+          },
+          {
+            id: 'be-16',
+            question:
+              'When should you keep a monolith instead of microservices?',
+            answer: [
+              'Default to a monolith (or a modular monolith: clear modules, one deploy) until a real boundary hurts: a team cannot ship, or one part must scale or fail alone.',
+              'Microservices add latency, versioning, observability, and “who owns this request?” debugging. Two developers and one product rarely need that.',
+              'A distributed transaction (“charge card and create order, or neither”) is harder than a SQL transaction in one process. If you cannot name the data owner, do not split yet.',
+              'Interview: “start together, split when a team or scale boundary is real.” Microfrontends are the UI version of the same tradeoff.',
+            ],
+            difficulty: 'easy',
           },
         ],
       },
@@ -5926,6 +6041,68 @@ export const categoryData: Category[] = [
               "Don’t run ```\nnpm ci and then npm install in the same pipeline unless you meant to change the lock\n```",
             ],
             difficulty: 'easy',
+          },
+        ],
+      },
+      {
+        id: 'tooling-build',
+        title: 'Compilers, engines & bundlers',
+        questions: [
+          {
+            id: 'te-31',
+            question: 'What is a compiler in a JavaScript / frontend app?',
+            answer: [
+              'A compiler rewrites source into another form. Here that usually means TypeScript → JS, JSX → `jsx()` calls, modern JS → older JS, or Angular templates → JS.',
+              "```\nconst n: number = 1\n// tsc / SWC / Babel emit:\nconst n = 1\n``` The output is still code. It is not the thing that draws pixels.",
+              'People say transpiler when the output is still JavaScript (Babel). Native compilers (`rustc`) emit machine code. Interviews mix the words.',
+              'Interview: “source in, equivalent JS out - before the bundler packages it and the engine runs it.” Babel, `tsc`, SWC, esbuild, Ivy, and the React Compiler are all in this bucket.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-32',
+            question: 'What is a JavaScript engine?',
+            answer: [
+              'The engine parses and executes JavaScript: V8 (Chrome, Edge, Node), SpiderMonkey (Firefox), JavaScriptCore (Safari).',
+              'It turns JS into bytecode / machine code (JIT), runs it, and garbage-collects memory. The host around it supplies the DOM (browser) or `fs` / `http` (Node).',
+              'It does not understand JSX, TypeScript, or Angular templates. Those must already be compiled to JS, or the engine throws a syntax error.',
+              'Interview: “engine runs JS. Compiler/bundler produce JS. Node is a host around V8, not a second language.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-33',
+            question: 'What is a bundler (builder), and what is webpack?',
+            answer: [
+              'A bundler walks `import` / `require`, concatenates modules, and emits files the browser can request (often hashed: `app.a1b2.js`). Webpack, Vite/Rollup, Rspack, and Parcel are bundlers.',
+              '“Builder” is the same pipeline, or a CLI wrapper around it (Angular builders, Nx executors). Vite is the common modern app builder; webpack is the classic one.',
+              "```\nmodule.exports = {\n  entry: \"./src/index.js\",\n  output: { filename: \"bundle.js\", path: __dirname + \"/dist\" },\n}\n``` Loaders inside webpack turn TS/CSS into JS; plugins add HTML, federation, etc.",
+              'Interview: “bundler packages modules; webpack is one bundler. You still run a compiler (tsc / Babel / SWC) as a loader or a prior step.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-34',
+            question: 'What is Babel?',
+            answer: [
+              'Babel is a JavaScript compiler (transpiler). It reads JS or JSX, runs plugins, and prints JS that your target browsers can parse.',
+              "Presets are plugin packs: `@babel/preset-env` (syntax for the browsers you listed), `@babel/preset-react` (JSX), `@babel/preset-typescript` (strip types).",
+              "```\n{\n  \"presets\": [\"@babel/preset-env\", \"@babel/preset-react\"]\n}\n``` Webpack calls this via `babel-loader`. Vite often skips Babel and uses esbuild/SWC instead.",
+              'Babel does not bundle files and does not execute the app. Interview: “Babel rewrites JS. Webpack/Vite bundle it. The engine runs it.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-35',
+            question:
+              'How do React and Angular become code the browser can read, and where does Babel fit?',
+            answer: [
+              'The browser only runs HTML, CSS, and JS. JSX, TypeScript, and Angular templates are not valid JS until a compiler rewrites them.',
+              "React: a compiler turns JSX into calls. ```\nconst el = <Hello name=\"Ada\" />\n// Babel / tsc / SWC / esbuild emit:\nconst el = React.createElement(Hello, { name: \"Ada\" })\n``` (modern apps use the automatic `jsx()` runtime instead of `createElement`). Then Vite or webpack bundles that JS with `react`.",
+              'Angular: Ivy compiles templates + `@Component` to JS; TypeScript/esbuild strip types; the CLI builder bundles. That is not Babel-first. Babel may still polyfill extra syntax in an old webpack config.',
+              'Interview: “compilers translate, bundlers package, the JS engine runs. Nobody ships raw JSX or `{{ name }}` to Chrome.”',
+            ],
+            difficulty: 'medium',
           },
         ],
       },
