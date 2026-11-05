@@ -378,6 +378,57 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
           </text>
         </svg>
       )
+    case 'C#':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#ede9fe" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="22"
+            fontWeight="700"
+            fill="#6d28d9"
+          >
+            C#
+          </text>
+        </svg>
+      )
+    case 'ASP':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#e0e7ff" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="18"
+            fontWeight="700"
+            fill="#3730a3"
+          >
+            ASP
+          </text>
+        </svg>
+      )
+    case 'VB':
+      return (
+        <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>
+          <rect width="80" height="80" rx="20" fill="#dbeafe" />
+          <text
+            x="40"
+            y="50"
+            textAnchor="middle"
+            fontFamily="Bricolage Grotesque, sans-serif"
+            fontSize="20"
+            fontWeight="700"
+            fill="#1d4ed8"
+          >
+            VB
+          </text>
+        </svg>
+      )
     case 'Algo':
       return (
         <svg className={className} viewBox="0 0 80 80" role="img" aria-label={title}>

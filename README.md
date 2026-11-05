@@ -21,7 +21,9 @@ License: [MIT](LICENSE)
 
 **Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security, testing, linting (ESLint, Oxlint), Git hooks / Husky, PRs and commits, CI/CD and GitHub Actions
 
-**Backend & fullstack:** Node.js, common backend layering (MVC, repository, service), Express, NestJS, Next.js, Python, Django, Flask, Ruby on Rails, Rust, Go
+**Backend:** Node.js, common backend layering (MVC, repository, service), Express, NestJS, Python, Flask, Rust, Go, C#, VB.NET
+
+**Fullstack:** Next.js, Django, Ruby on Rails, ASP.NET
 
 **Databases:** SQL, PostgreSQL, MongoDB, Redis
 

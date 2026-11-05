@@ -2942,6 +2942,24 @@ export const categoryData: Category[] = [
           },
         ],
       },
+      {
+        id: 'next-fullstack',
+        title: 'How Next.js is fullstack',
+        questions: [
+          {
+            id: 'nx-7',
+            question:
+              'How can Next.js act as a fullstack framework? What is frontend vs backend?',
+            answer: [
+              'One Next app can own both ends: React UI in the browser and server code (data, auth, APIs) in the same repo and deploy. That is why people call it fullstack JS.',
+              'Frontend: `page.tsx` / layouts, Client Components (`"use client"`), forms, hooks, CSS, `next/link` navigation. This is what the user sees and clicks.',
+              "Backend in the same project: Server Components fetch a DB or secret APIs; Route Handlers (`app/api/.../route.ts`) are HTTP endpoints; Server Actions run mutations on the server. Env secrets never ship to the client.",
+              "```\n// frontend UI (client)\n\"use client\"\nexport function LikeButton({ id }: { id: string }) {\n  return <button onClick={() => fetch(`/api/posts/${id}/like`, { method: \"POST\" })}>Like</button>\n}\n\n// backend API (same app)\n// app/api/posts/[id]/like/route.ts\nexport async function POST(_: Request, { params }: { params: { id: string } }) {\n  await db.likes.create({ postId: params.id })\n  return Response.json({ ok: true })\n}\n``` Interview: “UI in React, server in RSC / route handlers / actions - one Next deploy.”",
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
     ],
   },
   {
@@ -4711,6 +4729,24 @@ export const categoryData: Category[] = [
           },
         ],
       },
+      {
+        id: 'django-fullstack',
+        title: 'How Django is fullstack',
+        questions: [
+          {
+            id: 'dj-11',
+            question:
+              'How can Django act as a fullstack framework? What is frontend vs backend?',
+            answer: [
+              'Django can ship the whole product in one Python project: HTML UI, forms, auth, ORM, and admin - not only a JSON API for a separate SPA.',
+              'Frontend: templates (`.html` with `{{ }}` / `{% %}`), static CSS/JS, forms, and the admin UI. The browser gets HTML from Django and submits forms back to the same site.',
+              'Backend: `urls.py` + views, models/ORM, middleware, auth, and optional DRF for JSON. Business rules and DB access live here, not in the template.',
+              "```\n# urls.py (backend routing)\npath(\"users/<int:id>/\", views.user_detail, name=\"user-detail\")\n\n# views.py (backend)\ndef user_detail(request, id):\n  user = get_object_or_404(User, pk=id)\n  return render(request, \"users/detail.html\", {\"user\": user})\n\n{# users/detail.html (frontend) #}\n<h1>{{ user.name }}</h1>\n<form method=\"post\">{% csrf_token %}<button>Save</button></form>\n``` Interview: “templates + forms = frontend; views + models = backend - one Django app.”",
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
     ],
   },
   {
@@ -4915,6 +4951,24 @@ export const categoryData: Category[] = [
           },
         ],
       },
+      {
+        id: 'rails-fullstack',
+        title: 'How Rails is fullstack',
+        questions: [
+          {
+            id: 'rb-11',
+            question:
+              'How can Ruby on Rails act as a fullstack framework? What is frontend vs backend?',
+            answer: [
+              'Rails is built as fullstack MVC: one Ruby app serves HTML pages and also talks to the database. You do not need a separate frontend repo for a classic CRUD product.',
+              'Frontend: ERB (or Hotwire/Turbo/Stimulus) views under `app/views`, layouts, forms, and asset CSS/JS. The controller renders HTML the browser displays.',
+              'Backend: `routes.rb`, controllers, Active Record models, validations, migrations, and jobs. Controllers can also `render json:` for an API while keeping the same models.',
+              "```\n# config/routes.rb\nresources :posts\n\n# app/controllers/posts_controller.rb (backend)\ndef show\n  @post = Post.find(params[:id])\nend\n\n<%# app/views/posts/show.html.erb (frontend) %>\n<h1><%= @post.title %></h1>\n<%= form_with model: @post do |f| %>\n  <%= f.text_field :title %>\n  <%= f.submit %>\n<% end %>\n``` Interview: “views/forms = frontend; routes/controllers/models = backend - one Rails app.”",
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
     ],
   },
   {
@@ -5072,6 +5126,341 @@ export const categoryData: Category[] = [
               '`gofmt` (or `go fmt`) is not optional style: the compiler does not care, every team does. Interviews expect formatted snippets.',
             ],
             difficulty: 'easy',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'csharp',
+    type: 'C#',
+    name: 'C#',
+    blurb: 'Language basics on .NET: types, syntax, async, and LINQ.',
+    topics: [
+      {
+        id: 'csharp-basics',
+        title: 'C# basics',
+        questions: [
+          {
+            id: 'cs-1',
+            question: 'What is C#?',
+            answer: [
+              'A statically typed, object-oriented language from Microsoft. You write `.cs` files; the C# compiler emits IL that the .NET runtime (CLR) runs.',
+              'Used for ASP.NET web apps, desktop (WPF/WinForms/MAUI), games (Unity), and services. `dotnet new`, `dotnet build`, and `dotnet run` are the daily CLI.',
+              'Modern C# has records, pattern matching, async/await, and nullable reference types. Interviews almost always mean C# on .NET (Core / 5+), not old .NET Framework only.',
+              'Interview: “compiled to IL, runs on the CLR, first-class on ASP.NET and Unity.” Then show a small class with a property.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-2',
+            question: 'What is the difference between a value type and a reference type?',
+            answer: [
+              'Value types (struct, int, bool, DateTime, enum) store the data itself. Assigning copies the value. They usually live on the stack when local.',
+              'Reference types (class, string, array, delegate) store a reference to heap data. Assigning copies the reference; two variables can point at the same object.',
+              "```\nint a = 1; int b = a; b = 2; // a is still 1\nvar x = new Person(); var y = x; y.Name = \"Ada\"; // x.Name is Ada too\n```",
+              'string is a reference type that behaves immutably. Interview: value = copy the bits; reference = copy the pointer.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-3',
+            question: 'class vs struct in C#?',
+            answer: [
+              '`class` is a reference type. Use it for most domain objects, services, and anything with identity that you pass around.',
+              '`struct` is a value type. Prefer small, immutable-ish data (coordinates, money). Avoid large mutable structs - copies surprise people.',
+              "```\npublic class User { public string Name { get; set; } }\npublic readonly struct Point(int X, int Y);\n```",
+              'Default for “a thing with behavior” is class. Interview: structs copy; classes share. Don’t make a big Entity a struct.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-4',
+            question: 'What are common C# variable and string syntax basics?',
+            answer: [
+              "`int count = 0;` is an explicit type. `var count = 0;` lets the compiler infer the type from the right-hand side - still statically typed.",
+              "```\nvar name = \"Ada\";\nvar msg = $\"Hello, {name}\"; // string interpolation\nvar multi = \"\"\"\nline one\nline two\n\"\"\"; // raw string literal (C# 11+)\n```",
+              '`const int Max = 10;` must be a compile-time constant. `readonly` fields are set in the constructor. Prefer `string` over `String` in new code.',
+              'Interview: var is not dynamic. Interpolation (`$"…"`) beats string.Format for readability.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-5',
+            question: 'What are properties, and how do you write a method?',
+            answer: [
+              'A property exposes a field with get/set. Callers write `user.Name` instead of `user.GetName()`.',
+              "```\npublic class User\n{\n  public string Name { get; set; } = \"\";\n  public int Id { get; init; } // set on create only\n  public string Label => $\"#{Id} {Name}\"; // expression-bodied\n}\n```",
+              "```\npublic int Add(int a, int b) => a + b;\npublic void Save(User user) { /* … */ }\n``` `async Task<User> GetAsync(int id)` returns a Task you await.",
+              'Interview: auto-properties for simple state; methods for actions. Prefer `init` or private set when the object should not mutate freely.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-6',
+            question: 'How do if, switch, loops, and null checks look in C#?',
+            answer: [
+              "```\nif (count > 0) { … } else if (count == 0) { … } else { … }\nforeach (var item in items) { … }\nfor (var i = 0; i < items.Count; i++) { … }\nwhile (queue.TryDequeue(out var job)) { … }\n```",
+              "```\nvar label = status switch\n{\n  Status.Open => \"open\",\n  Status.Closed => \"closed\",\n  _ => \"unknown\",\n};\n``` Pattern matching beats long if-else chains.",
+              "Null: `string? name = null;` with nullable reference types. `name?.Length` and `name ?? \"guest\"` are the everyday operators.",
+              'Interview: show foreach for collections, switch expressions for mapping, and `?.` / `??` instead of nested null ifs.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'cs-7',
+            question: 'What is async / await in C#?',
+            answer: [
+              '`async` methods return `Task` or `Task<T>` (or `ValueTask`). Inside them you `await` other async work without blocking the thread.',
+              "```\npublic async Task<User?> GetUserAsync(int id)\n{\n  return await _db.Users.FindAsync(id);\n}\n``` The method yields while the DB waits; the thread can serve other requests.",
+              'Do not `.Result` or `.Wait()` on a Task in ASP.NET - that can deadlock or waste threads. Prefer async all the way up.',
+              'Interview: “async frees the thread during I/O.” It does not make CPU work faster by itself.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'cs-8',
+            question: 'What is LINQ, and how do you filter a list?',
+            answer: [
+              'LINQ is query operators over collections (and EF Core queries). Same ideas as filter/map: Where, Select, FirstOrDefault, OrderBy.',
+              "```\nvar adults = people\n  .Where(p => p.Age >= 18)\n  .Select(p => p.Name)\n  .ToList();\n``` Method syntax is what most teams write every day.",
+              'On `IEnumerable`, LINQ runs in memory. On `IQueryable` (EF), it becomes SQL - keep the expression translatable.',
+              'Interview: “Where filters, Select projects, deferred until you enumerate (or ToList).” Don’t call ToList too early on a big EF query.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'cs-9',
+            question: 'interface vs abstract class in C#?',
+            answer: [
+              'An interface declares a contract: methods/properties a type must implement. A class can implement many interfaces.',
+              "```\npublic interface IEmailSender\n{\n  Task SendAsync(string to, string body);\n}\n``` Good for DI: inject `IEmailSender`, swap Smtp vs fake in tests.",
+              'An abstract class can hold shared fields and partial implementation. A class inherits only one abstract base.',
+              'Interview default: prefer interfaces for dependencies. Use abstract class when you share real code and a clear “is-a” hierarchy.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'cs-10',
+            question: 'How do exceptions work in C#?',
+            answer: [
+              "```\ntry\n{\n  await SaveAsync(user);\n}\ncatch (DbException ex)\n{\n  _log.LogError(ex, \"save failed\");\n  throw; // rethrow - keeps the stack\n}\nfinally\n{\n  // always runs: dispose, unlock\n}\n```",
+              '`throw;` rethrows the same exception. `throw ex;` resets the stack - avoid it. Use specific catch types before a broad `Exception`.',
+              'Do not use exceptions for normal control flow (“user not found” as a return/result is often clearer in APIs).',
+              'Interview: try/catch/finally, specific catches, and “don’t swallow exceptions silently.”',
+            ],
+            difficulty: 'easy',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'aspnet',
+    type: 'ASP',
+    name: 'ASP.NET',
+    blurb: 'ASP.NET Core web APIs and MVC: pipeline, DI, and routing.',
+    topics: [
+      {
+        id: 'aspnet-basics',
+        title: 'ASP.NET Core basics',
+        questions: [
+          {
+            id: 'asp-1',
+            question: 'What is ASP.NET (Core)?',
+            answer: [
+              'Microsoft’s web framework on .NET. Today “ASP.NET” in interviews usually means ASP.NET Core: cross-platform, Kestrel, middleware pipeline.',
+              'You build HTTP APIs, MVC sites, Razor Pages, and gRPC. Classic ASP.NET on .NET Framework is Windows/IIS-era - still in legacy apps.',
+              '`dotnet new webapi` / `dotnet new mvc` scaffolds a project. `Program.cs` wires services and the request pipeline.',
+              'Interview: “ASP.NET Core = modern .NET web stack.” Mention middleware + DI before naming controllers.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'asp-2',
+            question: 'What is the request pipeline and middleware?',
+            answer: [
+              'Every HTTP request runs through a pipeline of middleware. Each piece can handle the request, call the next, or short-circuit (auth fail, static file).',
+              "```\nvar app = builder.Build();\napp.UseHttpsRedirection();\napp.UseAuthentication();\napp.UseAuthorization();\napp.MapControllers();\napp.Run();\n``` Order matters: authentication before authorization before endpoints.",
+              'Custom middleware is a class or `app.Use(async (ctx, next) => { …; await next(); })`. Good for logging, correlation ids, exception shaping.',
+              'Interview: “pipeline of delegates.” Wrong order is a common bug (auth after the endpoint never protects it).',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'asp-3',
+            question: 'What are controllers, actions, and routing?',
+            answer: [
+              'A controller groups HTTP endpoints. An action is a method that handles one route and returns a result (JSON, view, status).',
+              "```\n[ApiController]\n[Route(\"api/[controller]\")]\npublic class UsersController : ControllerBase\n{\n  [HttpGet(\"{id}\")]\n  public async Task<ActionResult<User>> Get(int id) =>\n    await _users.FindAsync(id) is { } u ? Ok(u) : NotFound();\n}\n```",
+              '`[HttpGet]`, `[HttpPost]`, route templates, and `[FromBody]` / `[FromQuery]` bind the request. Minimal APIs map the same idea with `app.MapGet(...)`.',
+              'Interview: controller = class, action = method, route attributes (or conventional routes) decide the URL.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'asp-4',
+            question: 'How does dependency injection work in ASP.NET Core?',
+            answer: [
+              'Built-in DI: register services in `Program.cs`, inject them into constructors. Controllers stay thin; services hold business logic.',
+              "```\nbuilder.Services.AddScoped<IUserService, UserService>();\nbuilder.Services.AddSingleton<IClock, SystemClock>();\n``` Scoped = one instance per HTTP request. Singleton = one for the app. Transient = new every time.",
+              "```\npublic UsersController(IUserService users) => _users = users;\n``` The framework creates the controller and passes dependencies.",
+              'Interview: “constructor injection + AddScoped/Singleton.” Never new up a DbContext by hand inside an action if DI can provide it.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'asp-5',
+            question: 'MVC vs Razor Pages vs Minimal APIs?',
+            answer: [
+              'MVC: Controllers + Views (or API controllers with JSON). Clear separation for larger apps and classic server-rendered sites.',
+              'Razor Pages: page-focused `.cshtml` + PageModel. Less ceremony for form-heavy sites. Still ASP.NET Core.',
+              'Minimal APIs: map routes in `Program.cs` with lambdas. Great for small HTTP APIs; less structure than controllers.',
+              'Interview: pick by shape of the app. APIs often use controllers or minimal APIs; HTML forms often Razor Pages or MVC views.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'asp-6',
+            question: 'What is model binding and validation?',
+            answer: [
+              'Model binding maps the request (route, query, body, headers) onto action parameters or a model type.',
+              "```\npublic record CreateUserDto(string Email, string Name);\n\n[HttpPost]\npublic IActionResult Create([FromBody] CreateUserDto dto)\n{\n  if (!ModelState.IsValid) return ValidationProblem(ModelState);\n  …\n}\n``` `[ApiController]` auto-returns 400 when ModelState is invalid.",
+              'Data annotations (`[Required]`, `[EmailAddress]`) or FluentValidation check the model. Never trust the client - validate on the server.',
+              'Interview: binding fills the object; validation decides if it is acceptable. Return 400 with field errors, not 500.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'asp-7',
+            question: 'What is appsettings.json, and how do you read configuration?',
+            answer: [
+              '`appsettings.json` (plus `appsettings.Development.json`) holds config: connection strings, feature flags, logging levels.',
+              "```\nvar cs = builder.Configuration.GetConnectionString(\"Default\");\nvar opts = builder.Configuration.GetSection(\"Mail\").Get<MailOptions>();\n``` Prefer Options pattern (`IOptions<T>`) over scattering `Configuration[\"key\"]`.",
+              'Secrets stay out of source control: user secrets locally, env vars / Key Vault in production. Environment overrides JSON.',
+              'Interview: “JSON config + environment overrides + DI Options.” Do not commit production passwords in appsettings.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'asp-8',
+            question: 'How do you return HTTP status codes from an API action?',
+            answer: [
+              '`ControllerBase` helpers: `Ok(value)` → 200, `CreatedAtAction(...)` → 201, `NoContent()` → 204, `BadRequest()` → 400, `Unauthorized()` → 401, `Forbid()` → 403, `NotFound()` → 404.',
+              "```\nif (user is null) return NotFound();\nreturn Ok(user);\n``` Prefer `ActionResult<T>` so the signature documents both the body type and the status paths.",
+              'Do not hide failures behind `Ok(new { error = "…" })`. Clients and monitors key off the status code.',
+              'Interview: name Ok / NotFound / BadRequest and when you would use each. Same HTTP families as any REST API.',
+            ],
+            difficulty: 'easy',
+          },
+        ],
+      },
+      {
+        id: 'aspnet-fullstack',
+        title: 'How ASP.NET is fullstack',
+        questions: [
+          {
+            id: 'asp-9',
+            question:
+              'How can ASP.NET act as a fullstack framework? What is frontend vs backend?',
+            answer: [
+              'ASP.NET Core can own UI and server in one project: MVC / Razor Pages render HTML, while controllers/services/EF Core handle HTTP and data. Same host, one deploy.',
+              'Frontend: Razor views (`.cshtml`), Razor Pages, Tag Helpers, forms, and wwwroot static CSS/JS (or a SPA you still host from the same app). The browser gets HTML or assets from Kestrel/IIS.',
+              'Backend: middleware, controllers / Minimal APIs, DI services, EF Core / SQL, auth. You can also expose JSON APIs from the same app the HTML site uses.',
+              "```\n// Backend: controller action\n[HttpGet(\"{id}\")]\npublic async Task<IActionResult> Details(int id)\n{\n  var post = await _db.Posts.FindAsync(id);\n  if (post is null) return NotFound();\n  return View(post); // renders frontend view\n}\n\n@* Frontend: Views/Posts/Details.cshtml *@\n@model Post\n<h1>@Model.Title</h1>\n<form asp-action=\"Edit\" method=\"post\">\n  <input asp-for=\"Title\" />\n  <button type=\"submit\">Save</button>\n</form>\n``` Interview: “Razor/MVC views = frontend; controllers/services/EF = backend - one ASP.NET app.”",
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'vbnet',
+    type: 'VB',
+    name: 'VB.NET',
+    blurb: 'Visual Basic on .NET: syntax basics and how it relates to C#.',
+    topics: [
+      {
+        id: 'vbnet-basics',
+        title: 'VB.NET basics',
+        questions: [
+          {
+            id: 'vb-1',
+            question: 'What is VB.NET (Visual Basic .NET)?',
+            answer: [
+              'VB.NET is Visual Basic rewritten for the .NET CLR. It compiles to the same IL as C# and can use the same libraries (ASP.NET, ADO.NET, WinForms).',
+              'Syntax is more English-like (`If…Then`, `End If`, `Dim`) than C-style braces. Still a first-class .NET language, though most new greenfield work picks C#.',
+              'Classic VB6 is a different product (COM, not the CLR). Interviews that say “VB.NET” mean the .NET language, not VB6.',
+              'Interview: “same runtime as C#, different syntax.” You can reference a C# DLL from VB and the other way around.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'vb-2',
+            question: 'How does VB.NET relate to C# and ASP.NET?',
+            answer: [
+              'Both languages target the CLR. Types, garbage collection, async, and NuGet packages work the same; only the source syntax differs.',
+              'ASP.NET Core projects can be VB or C#. Same middleware, DI, and Kestrel ideas - templates and samples are mostly C# today.',
+              'Teams often keep legacy VB.NET modules and write new code in C# inside one solution. Interop is normal because both are IL.',
+              'Interview: “VB.NET and C# are siblings on .NET; ASP.NET is the web framework either language can use.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'vb-3',
+            question: 'What does basic VB.NET variable and procedure syntax look like?',
+            answer: [
+              "`Dim count As Integer = 0` declares a variable. `Dim name As String = \"Ada\"`. With `Option Infer On`, `Dim count = 0` can infer the type.",
+              "```\nPublic Function Add(a As Integer, b As Integer) As Integer\n  Return a + b\nEnd Function\n\nPublic Sub Save(user As User)\n  ' no return value\nEnd Sub\n```",
+              '`Function` returns a value; `Sub` does not. `Public` / `Private` / `Friend` control access (Friend ≈ internal in C#).',
+              'Interview: Dim for locals, Function vs Sub, End Function / End Sub close the block - no curly braces.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'vb-4',
+            question: 'How do If, loops, and string interpolation look in VB.NET?',
+            answer: [
+              "```\nIf count > 0 Then\n  Console.WriteLine(\"has items\")\nElseIf count = 0 Then\n  Console.WriteLine(\"empty\")\nElse\n  Console.WriteLine(\"negative\")\nEnd If\n``` Equality is `=` (not `==`). Not-equal is `<>`.",
+              "```\nFor Each item In items\n  Console.WriteLine(item)\nNext\n\nFor i = 0 To items.Count - 1\n  Console.WriteLine(items(i))\nNext\n``` Arrays and lists use `()` for indexing: `items(0)`.",
+              "`Dim msg = $\"Hello, {name}\"` works in modern VB the same idea as C# interpolation. `&` also concatenates strings: `\"Hi \" & name`.",
+              'Interview: show If/End If, For Each/Next, and that `=` compares in VB where C# uses `==`.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'vb-5',
+            question: 'What are classes and properties in VB.NET?',
+            answer: [
+              "```\nPublic Class User\n  Public Property Name As String\n  Public Property Id As Integer\n\n  Public Function Label() As String\n    Return $\"#{Id} {Name}\"\n  End Function\nEnd Class\n```",
+              '`Property` get/set is the usual way to expose state (like C# properties). `ReadOnly Property` has only a getter.',
+              '`New User()` constructs. `Implements IEmailSender` on a class is how you fulfill an interface.',
+              'Interview: Class / End Class, Property, New - same OOP ideas as C# with VB keywords.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'vb-6',
+            question: 'What are Option Strict and Option Explicit?',
+            answer: [
+              '`Option Explicit On` forces you to declare variables (`Dim`). Typos become compile errors instead of silent new variants.',
+              '`Option Strict On` blocks unsafe implicit conversions (narrowing, late binding). You must `CInt(...)` / `CType(...)` when types differ.',
+              'Turn both On for production VB. `Option Strict Off` feels loose in demos and hides bugs interviews will call out.',
+              'Interview: “Explicit + Strict On = safer VB.” Same spirit as avoiding `dynamic` everywhere in C#.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'vb-7',
+            question: 'How do you handle Nothing, Try/Catch, and async in VB.NET?',
+            answer: [
+              '`Nothing` is VB’s null. `If name Is Nothing Then …`. `If name IsNot Nothing Then …`. For nullable value types use `Integer?`.',
+              "```\nTry\n  Await SaveAsync(user)\nCatch ex As Exception\n  Log(ex)\n  Throw ' rethrow\nFinally\n  ' cleanup\nEnd Try\n```",
+              "`Public Async Function GetUserAsync(id As Integer) As Task(Of User)` then `Dim user = Await GetUserAsync(1)`. Same Task model as C#.",
+              'Interview: Nothing ≈ null, Try/Catch/Finally, Async/Await - same CLR features, VB keywords.',
+            ],
+            difficulty: 'medium',
           },
         ],
       },
