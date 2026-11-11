@@ -1254,19 +1254,6 @@ export const categoryData: Category[] = [
             difficulty: 'medium',
           },
           {
-            id: 're-28',
-            question: 'What is the difference between React and React Native?',
-            answer: [
-              'React: builds web UIs that render to the browser DOM (div, span, …)',
-              'React Native: builds mobile apps that render to native views (View, Text, …)',
-              'Same ideas: components, props, state, hooks, reconciliation',
-              'Different primitives and styling (CSS vs StyleSheet / flex-first native layout)',
-              'Navigation, gestures, and platform APIs differ; not a drop-in web app',
-              'Shared: JS/TS logic and many patterns; UI layer is platform-specific',
-            ],
-            difficulty: 'easy',
-          },
-          {
             id: 're-30',
             question: 'What is a microfrontend, why use one, and how do you use it?',
             answer: [
@@ -1435,10 +1422,10 @@ export const categoryData: Category[] = [
             id: 'rn-2',
             question: 'What is the difference between React and React Native?',
             answer: [
-              "React (web) renders to the DOM. React Native renders to platform primitives (UIView / Android View). There is no `document`, no CSS file, no `div`.",
+              "React (web) renders to the DOM (`div`, `span`). React Native renders to platform primitives (UIView / Android View). Same React ideas: components, props, state, hooks, reconciliation - different host.",
               "Styling: web uses CSS (classes, cascade, media queries). RN uses a `StyleSheet` object: ```\n{ flex: 1, padding: 16 }\n``` Flexbox is the layout system (column is the default direction, unlike web).",
-              'Navigation is not react-router. You use React Navigation (stack/tabs) or Expo Router. Links and URLs exist in Expo Router; classic RN is screen names.',
-              "You can share hooks, validation, and API clients. You cannot drop a web page into RN unchanged: replace HTML/CSS, browser APIs, and `window`.",
+              'Navigation, gestures, and platform APIs differ: not react-router. Use React Navigation (stack/tabs) or Expo Router. It is not a drop-in web app.',
+              "Share hooks, validation, and API clients. Do not drop a web page into RN unchanged: replace HTML/CSS, browser APIs, and `window`.",
             ],
             difficulty: 'easy',
           },
@@ -1481,8 +1468,60 @@ export const categoryData: Category[] = [
             answer: [
               'React Native: you already know React, you want iOS + Android, and some native look. Expo speeds the start. You can add a web target, but it is not a drop-in Next app.',
               'React web: SEO, URLs, CSS, the browser. Do not use RN if the product is a website.',
-              'Flutter: you want one UI toolkit (Dart + widgets) that paints its own pixels, very consistent across platforms. The team must learn Dart, not reuse React.',
-              'Interview: skill of the team + whether you need native widgets (RN) or a custom-drawn UI (Flutter) + whether web is the main surface (React).',
+              'Flutter: you want one UI toolkit (Dart + widgets) whose engine draws every pixel, so iOS and Android look the same. The team must learn Dart, not reuse React.',
+              'Interview: team skill + OEM native controls (RN) vs Flutter drawing the UI itself (“custom-drawn”) + whether the main product is a website (React). See Flutter notes for those terms.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'rn-storage',
+        title: 'Local storage (SQLite & AsyncStorage)',
+        questions: [
+          {
+            id: 'rn-7',
+            question: 'What is SQLite, and where is it used?',
+            answer: [
+              'SQLite is a small relational database that lives as a file on disk. You talk to it with SQL (tables, indexes, JOIN, WHERE) - no separate database server process.',
+              'It ships inside phones, browsers (Web SQL / OPFS wrappers), desktop apps, and many embedded devices. On React Native / Expo you use a library such as `expo-sqlite` or `react-native-quick-sqlite` / `op-sqlite`.',
+              'Good for structured offline data: lists, filters, relations (user → posts), and anything you would query with SQL on a server.',
+              'Interview: “SQL database in a file, embedded in the app.” Not a cloud DB - it is local to the device unless you sync it yourself.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'rn-8',
+            question: 'What is AsyncStorage in React Native?',
+            answer: [
+              'A simple async key/value store for the app (`@react-native-async-storage/async-storage`). Keys and values are strings (JSON.stringify objects yourself).',
+              "```\nawait AsyncStorage.setItem(\"theme\", \"dark\")\nconst theme = await AsyncStorage.getItem(\"theme\")\nawait AsyncStorage.removeItem(\"theme\")\n``` Same idea as web `localStorage`, but async and available on RN.",
+              'There is no SQL, no index, no query language - you know the key, or you `getAllKeys` and scan. Fine for small prefs and tokens; awkward for large lists.',
+              'Interview: “string key → string value, async API.” Not a database. Do not dump a 10k-row feed into one JSON blob.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'rn-9',
+            question:
+              'When do you use SQLite vs AsyncStorage in React Native?',
+            answer: [
+              'AsyncStorage: tiny settings (theme, onboarding done), a cached user id, a few flags. Write is “set this key.” Read is “get that key.”',
+              'SQLite: many rows, offline catalogs, chat history, drafts you filter/sort/search, or data with relations. You need WHERE, ORDER BY, indexes, or pagination.',
+              'If you catch yourself `JSON.parse` of a giant array from AsyncStorage on every screen open, move that data to SQLite (or a sync engine like WatermelonDB on top of SQLite).',
+              'Interview: “prefs → AsyncStorage; structured / queryable / large → SQLite.” You can use both in one app.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'rn-10',
+            question:
+              'SQLite vs AsyncStorage: which is easier to store, search, and index?',
+            answer: [
+              'Easier to store a single value: AsyncStorage. One `setItem` / `getItem`, no schema, no migrations. SQLite needs a DB open, `CREATE TABLE`, and usually a migration story when columns change.',
+              'Easier to search and filter: SQLite. ```\nSELECT * FROM notes WHERE title LIKE ? ORDER BY updated_at DESC LIMIT 20\n``` AsyncStorage cannot do that - you load keys/values in JS and filter by hand (slow and memory-heavy).',
+              'Easier to index: SQLite. ```\nCREATE INDEX idx_notes_title ON notes (title);\n``` Indexes make lookups and sorts cheap. AsyncStorage has no indexes - every “search” is a scan of what you already loaded.',
+              '“Better” depends on the job. Prefer AsyncStorage for a handful of strings. Prefer SQLite when you care about search, sort, size, or relations. Interview: “key-value vs real SQL queries.”',
             ],
             difficulty: 'medium',
           },
@@ -1538,8 +1577,8 @@ export const categoryData: Category[] = [
             question: 'What are the differences between Flutter and React Native?',
             answer: [
               'Language: Dart vs JavaScript/TypeScript. Flutter is not React; there are no hooks unless you add a package that mimics them.',
-              'Rendering: Flutter draws its own pixels (consistent UI, custom look is easy). RN maps to native views (platform look, you drop to Swift/Kotlin for some widgets).',
-              "Ecosystem: RN reuses ```\nnpm and React knowledge. Flutter reuses pub.dev and one official toolkit. Team skill is usually the deciding vote\n```",
+              'Rendering: Flutter’s engine custom-draws every pixel (one look everywhere). RN maps components to native views (platform look; you drop to Swift/Kotlin for some controls).',
+              "Ecosystem: RN reuses ```\nnpm and React knowledge. Flutter reuses pub.dev and one official UI toolkit (widgets). Team skill is usually the deciding vote\n```",
               'Both do iOS + Android. Both can do web; neither replaces a purpose-built React/Next site if the web app is the product.',
             ],
             difficulty: 'easy',
@@ -1565,6 +1604,41 @@ export const categoryData: Category[] = [
               'Interview: “renderer + language + team.” There is no universal winner; say what you would optimize for.',
             ],
             difficulty: 'easy',
+          },
+          {
+            id: 'flut-7',
+            question: 'What does “one UI toolkit” mean for Flutter?',
+            answer: [
+              'A UI toolkit is the set of building blocks you use to build screens: buttons, text, lists, layout, themes, navigation. On the web that is HTML/CSS; in Flutter it is the widget library.',
+              '“One UI toolkit” means Flutter ships its own full set (`Material`, `Cupertino`, `Row`, `Column`, …) and you use that same set on iOS, Android, web, and desktop. You are not assembling Apple’s UIKit controls on iPhone and Google’s Android Views on phone B.',
+              'React Native is different: JS describes the UI, but the toolkit underneath is mostly the platform’s own widgets (`UIView`, Android `View`). Two platforms, two native control libraries, one React API on top.',
+              'Interview: “Flutter = one official widget kit everywhere. RN = React API over each OS’s native controls.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'flut-8',
+            question:
+              'What is a “custom-drawn UI,” and how is that different from React Native?',
+            answer: [
+              'Custom-drawn means the framework paints pixels itself (Flutter’s engine: Impeller / Skia), like a game drawing a button - not asking iOS/Android “please put a system Button here.”',
+              'React Native maps your `<View>` / `<Text>` to real native views. The OS draws those controls, so they inherit platform look, accessibility, and some OEM behavior by default.',
+              'So in Flutter a `ElevatedButton` is Flutter’s drawing of a button on a canvas. In RN a button is closer to a real platform control (or a thin wrapper around one).',
+              'Interview: “Flutter draws the UI. RN hosts native UI.” That is the whole phrase “custom-drawn UI” - drawn by the framework, not by the OEM widget factory.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'flut-9',
+            question:
+              'What are the advantages of Flutter’s custom-drawn UI over React Native?',
+            answer: [
+              'Same pixels on every device: fewer “looks different on iOS vs Android” bugs. Brand-heavy or highly custom screens are easier because you are not fighting OEM control styles.',
+              'Animation and unusual layouts are often smoother to own: you control the paint, not a tree of native views with platform quirks. One design system in Dart widgets stays consistent.',
+              'Tradeoff (RN’s advantage): true native look-and-feel, reuse of existing native modules, and React/JS hiring. Flutter’s tradeoff is Dart + you own more of accessibility/feel yourself.',
+              'Interview: Flutter wins on visual consistency and custom UI. RN wins on React ecosystem and OEM widgets. Pick from product + team, not hype.',
+            ],
+            difficulty: 'medium',
           },
         ],
       },
@@ -3312,7 +3386,7 @@ export const categoryData: Category[] = [
               'A table is a grid: every row has the same columns. users: id | name | email. One cell, one value. Extra facts (orders) live in another table.',
               'A document is a JSON-like tree: { _id, name, email, orders: [{ id, total }] }. Nested objects and arrays are allowed in one record.',
               "Table = fixed shape, many relations. Document = one object that can look like your API response. Mongo stores BSON (binary JSON), not a text `.json` file.",
-              'You can put JSON inside a SQL column (Postgres JSONB) - that is still a table row with a JSON cell, not a document database.',
+              'You can put JSON inside a SQL column (Postgres JSONB / MySQL JSON) - that is still a table row with a JSON cell, not a document database.',
             ],
             difficulty: 'easy',
           },
@@ -3322,7 +3396,7 @@ export const categoryData: Category[] = [
             answer: [
               "Document: one ```\ninsertOne({\n  name: \"Ada\", orders: [{ total: 10 }, { total: 20 }]\n})\n``` The child data is inside the parent. One write, one _id.",
               "Relational: ```\nINSERT INTO users (name)\nVALUES ('Ada') RETURNING id;\n``` then ```\nINSERT INTO orders (user_id, total)\nVALUES (1, 10), (1, 20);\n``` two tables, a foreign key.",
-              "To add a new order later: Mongo $push: { orders: { total: 30 } } (or a second orders collection). SQL: one `INSERT into orders` - users table does not change.",
+              "To add a new order later: Mongo `$push: { orders: { total: 30 } }` (or a second orders collection). SQL: one `INSERT into orders` - the users table does not change.",
               'Document insert is simpler when you always load the whole blob. Table insert is simpler when orders are shared, huge, or queried on their own.',
             ],
             difficulty: 'medium',
@@ -3331,9 +3405,9 @@ export const categoryData: Category[] = [
             id: 'mo-30',
             question: 'How does data look in the database if it is not JSON?',
             answer: [
-              'In Postgres it looks like rows: a users table might be id=1, name=Ada, email=a@x.com on one line; the next line is id=2, name=Lin, …',
+              'In a SQL DB it looks like rows: a users table might be id=1, name=Ada, email=a@x.com on one line; the next line is id=2, name=Lin, …',
               'Related data is not nested. Ada’s orders are other rows in orders: id=10, user_id=1, total=10. You JOIN to see them together.',
-              'On disk it is pages of typed columns (integers, text), not a JSON string. The SQL client prints a grid; that grid is the mental model.',
+              'On disk it is pages of typed columns (integers, text), not a JSON string. The SQL client prints a grid; that grid is the mental model. A driver may still map a JOIN result into objects in your app.',
               'Mongo’s on-disk form is BSON (binary). The shell prints JSON because that is the readable view. “Not JSON” in SQL means: grid of columns, not a tree.',
             ],
             difficulty: 'easy',
@@ -3683,56 +3757,6 @@ export const categoryData: Category[] = [
               'Interview: many = set of rows + pagination; unique = one key, one row, unique index.',
             ],
             difficulty: 'medium',
-          },
-        ],
-      },
-      {
-        id: 'sql-vs-nosql',
-        title: 'SQL vs NoSQL & tables vs JSON',
-        questions: [
-          {
-            id: 'sql-28',
-            question: 'What is the difference between SQL and NoSQL?',
-            answer: [
-              'SQL (relational) stores data in tables with fixed columns. You query with SQL: SELECT, JOIN, WHERE. Postgres, MySQL, SQLite.',
-              'NoSQL is a label for stores that are not “tables + SQL as the main model.” Mongo is document NoSQL. Others: key-value (Redis), wide-column (Cassandra), graph (Neo4j).',
-              'SQL: schema up front, strong constraints, joins, transactions. NoSQL documents: flexible shape, nest related data, scale-out patterns - joins and constraints are weaker or app-enforced.',
-              'Neither is “better.” SQL is the default for most apps. Document NoSQL fits evolving JSON-shaped aggregates. Interview: explain the model, not a brand war.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'sql-29',
-            question: 'What is table-based data vs a JSON / document structure?',
-            answer: [
-              'A table is a grid: every row has the same columns. users: id | name | email. One cell, one value. Extra facts (orders) live in another table.',
-              'A document is a JSON-like tree: { _id, name, email, orders: [{ id, total }] }. Nested objects and arrays are allowed in one record.',
-              'Table = fixed shape, many relations. Document = one object that can look like your API response.',
-              'You can put JSON inside a SQL column (JSON / JSONB) - that is still a table row with a JSON cell, not a document database.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'sql-30',
-            question: 'How does inserting a user + orders differ in JSON vs a relational table?',
-            answer: [
-              "Relational: ```\nINSERT INTO users (name)\nVALUES ('Ada');\n``` then ```\nINSERT INTO orders (user_id, total)\nVALUES (1, 10), (1, 20);\n``` two tables, a foreign key.",
-              "Document: one ```\ninsertOne({\n  name: \"Ada\", orders: [{ total: 10 }, { total: 20 }]\n})\n``` The child data is inside the parent. One write, one id.",
-              "To add a new order later: SQL is one `INSERT into orders` - the users table does not change. Mongo often $push into the parent (or uses a second collection).",
-              'Document insert is simpler when you always load the whole blob. Table insert is simpler when orders are shared, huge, or queried on their own.',
-            ],
-            difficulty: 'medium',
-          },
-          {
-            id: 'sql-31',
-            question: 'How does data look in the database if it is not JSON?',
-            answer: [
-              'It looks like rows: a users table might be id=1, name=Ada, email=a@x.com on one line; the next line is id=2, name=Lin, …',
-              'Related data is not nested. Ada’s orders are other rows in orders: id=10, user_id=1, total=10. You JOIN to see them together.',
-              'On disk it is pages of typed columns (integers, text), not a JSON string. The SQL client prints a grid; that grid is the mental model.',
-              '“Not JSON” in SQL means: grid of columns, not a tree. A driver may still map a JOIN result into objects in your app.',
-            ],
-            difficulty: 'easy',
           },
         ],
       },
