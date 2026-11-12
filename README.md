@@ -19,7 +19,11 @@ License: [MIT](LICENSE)
 
 ## Topics
 
-**Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security, testing, linting (ESLint, Oxlint), Git hooks / Husky, PRs and commits, CI/CD and GitHub Actions
+**Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Native, Flutter, Vue, Angular, Browser & DOM, state, performance, network & security
+
+**Testing:** unit/integration/E2E mindset, Vitest, Testing Library, coverage
+
+**Tooling:** npm, bundlers/Babel, linting (ESLint, Oxlint), Git hooks / Husky, PRs and commits, PR bots, CI/CD and GitHub Actions
 
 **Backend:** Node.js, common backend layering (MVC, repository, service), Express, NestJS, Python, Flask, Rust, Go, C#, VB.NET
 
