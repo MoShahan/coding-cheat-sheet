@@ -248,6 +248,56 @@ export const categoryData: Category[] = [
           },
         ],
       },
+      {
+        id: 'css-tailwind',
+        title: 'Tailwind CSS',
+        questions: [
+          {
+            id: 'css-11',
+            question: 'What is Tailwind CSS?',
+            answer: [
+              'A utility-first CSS framework: you style with small classes in the markup (`flex`, `gap-4`, `text-sm`, `bg-slate-900`) instead of writing custom CSS files per component.',
+              'A build step (PostCSS / Vite plugin) scans your templates and emits only the utilities you used - the shipped CSS stays small.',
+              'You configure design tokens in `tailwind.config` (colors, spacing, fonts) so the team shares one scale.',
+              'Not a component library (that’s shadcn/ui, DaisyUI, etc.). Tailwind is the styling layer those tools often sit on.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'css-12',
+            question: 'Why use Tailwind instead of plain CSS or CSS Modules?',
+            answer: [
+              'Speed: most UI is composed from known utilities - less context-switching to a stylesheet and inventing class names.',
+              'Consistency: spacing/color come from the config scale, so “random 13px margins” are harder by default.',
+              'Colocation: styles live next to the JSX/HTML they affect, which helps in component-heavy React/Vue apps.',
+              'Plain CSS/Modules still win for complex animations, one-off marketing pages, or teams that prefer semantic class names.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'css-13',
+            question: 'How do you use Tailwind (basics)?',
+            answer: [
+              "```\n<button className=\"rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700\">\n  Save\n</button>\n``` - layout, color, and hover in the class list.",
+              'Responsive: `md:flex`, `lg:grid-cols-3` apply from that breakpoint up (mobile-first). Dark: `dark:bg-zinc-900`.',
+              'Extract repeats with a component (preferred) or `@apply` in a CSS file when a true shared class helps. Don’t `@apply` everything.',
+              'Content paths in config must include every file that uses classes, or purged utilities go missing in production.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'css-14',
+            question: 'What are common Tailwind pitfalls?',
+            answer: [
+              'Long unreadable class strings - fix with components or `cva` / `clsx` for variants, not by copying 20 classes everywhere.',
+              'Fighting specificity with `!important` utilities (`!flex`) is a smell; fix the cascade or extract a component.',
+              'Forgetting `content` globs → missing styles in prod. Dynamic class names like `bg-${color}-500` often won’t be detected - use full class strings or a safelist.',
+              'Interview: utilities for speed + a small set of components for reuse; raw CSS still fine for weird one-offs.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
     ],
   },
   {
@@ -1826,6 +1876,56 @@ export const categoryData: Category[] = [
               'Duplicating fetched data into Redux without cache rules is how apps get two sources of truth.',
             ],
             difficulty: 'easy',
+          },
+        ],
+      },
+      {
+        id: 'state-tanstack-query',
+        title: 'TanStack Query',
+        questions: [
+          {
+            id: 'st-5',
+            question: 'What is TanStack Query (React Query)?',
+            answer: [
+              'A library for server state: fetching, caching, background refetch, retries, and mutations - not a global UI store like Redux/Zustand.',
+              'You declare queries with a key and a fetch function; the cache is shared across components that use the same key.',
+              'Handles loading/error flags, stale-while-revalidate, window focus refetch, and pagination/infinite query helpers.',
+              'Interview: “cache for remote data.” Keep modal open flags in useState/Zustand.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'st-6',
+            question: 'When do you use TanStack Query?',
+            answer: [
+              'Any data that comes from an API and can go stale: lists, detail pages, user profiles, dashboards.',
+              'When multiple screens need the same fetch and you don’t want prop-drill or duplicate `useEffect` + `useState` loading glue.',
+              'Skip it for pure client state (theme, wizard step) or one-shot fire-and-forget calls with no reuse.',
+              'Pairs well with a tiny client store: Query for server, Zustand/useState for UI.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'st-7',
+            question: 'How do useQuery and useMutation work (basics)?',
+            answer: [
+              "```\nconst { data, isPending, error } = useQuery({\n  queryKey: ['todos', userId],\n  queryFn: () => fetchTodos(userId),\n})\n``` - key identifies the cache entry; queryFn loads it.",
+              "```\nconst mutation = useMutation({\n  mutationFn: addTodo,\n  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['todos'] }),\n})\n``` - writes go through mutations; invalidate so lists refetch.",
+              '`queryKey` must include every input that changes the result (ids, filters). Same key = shared cache.',
+              'Wrap the app in `QueryClientProvider` with one `QueryClient` instance.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'st-8',
+            question: 'What are staleTime, cacheTime/gcTime, and why do they matter?',
+            answer: [
+              'staleTime: how long data is “fresh.” Fresh data is not refetched on remount/focus. Default is 0 (immediately stale).',
+              'gcTime (formerly cacheTime): how long unused cache entries stay in memory before garbage collection.',
+              'Raise staleTime for mostly-static data (config, feature flags). Keep it low when users expect live numbers.',
+              'Interview: “staleTime controls refetch eagerness; gcTime controls memory.” Don’t confuse them with HTTP Cache-Control.',
+            ],
+            difficulty: 'medium',
           },
         ],
       },
@@ -3425,6 +3525,67 @@ export const categoryData: Category[] = [
           },
         ],
       },
+      {
+        id: 'mongo-atlas-sharding',
+        title: 'Atlas & sharding',
+        questions: [
+          {
+            id: 'mo-32',
+            question: 'What is MongoDB Atlas?',
+            answer: [
+              'Atlas is MongoDB’s managed cloud service: you get a cluster (replica set) without installing mongod yourself.',
+              'It handles provisioning, backups, monitoring, TLS, and upgrades. You pick region, tier (M0 free → paid), and connect with a URI.',
+              'Still the same MongoDB API: drivers, Compass, and shell talk to Atlas the same way they talk to a self-hosted cluster.',
+              'Interview: “hosted Mongo with ops baked in” - not a different database product.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'mo-33',
+            question: 'When do you use MongoDB Atlas (vs self-hosting)?',
+            answer: [
+              'Use Atlas when you want Mongo without owning servers: startups, side projects, teams without a DBA, multi-region needs.',
+              'You get automated backups, alerting, and easy vertical/horizontal scale from the UI or API.',
+              'Self-host when compliance, cost at huge scale, or air-gapped networks force you onto your own VMs/Kubernetes.',
+              'Don’t pick Atlas just for “cloud.” Pick it when managed ops beat the monthly bill of running replica sets yourself.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'mo-34',
+            question: 'How do you use Atlas in an app (basics)?',
+            answer: [
+              'Create a project/cluster, whitelist IPs (or use VPC peering / Private Link), create a DB user, copy the connection string.',
+              "```\nmongodb+srv://user:pass@cluster0.abc.mongodb.net/mydb?retryWrites=true&w=majority\n``` goes in an env var - never in the frontend bundle.",
+              'In Node: `mongoose.connect(process.env.MONGODB_URI)` or the official driver. Same CRUD as local Mongo.',
+              'Turn on Network Access carefully. “Allow 0.0.0.0/0” is fine for a quick demo, bad as a permanent habit.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'mo-35',
+            question: 'What is sharding in MongoDB?',
+            answer: [
+              'Sharding splits one logical collection across many machines (shards). Each shard holds a subset of the documents.',
+              'A shard key decides where a doc lives. A mongos router sends queries to the right shard(s). Config servers store the cluster metadata.',
+              'Goal: horizontal scale for data size and write throughput when one replica set’s disk/CPU is not enough.',
+              'Not the same as a replica set: replicas copy the same data for HA; shards partition different data for capacity.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'mo-36',
+            question: 'When should you use sharding?',
+            answer: [
+              'When a single replica set cannot hold the working set or write load - multi-TB collections, write-heavy ingest, clear partition by tenant/region.',
+              'Pick a shard key with high cardinality and even distribution (e.g. hashed userId). A bad key (low cardinality, always “hot”) makes one shard do all the work.',
+              'Avoid sharding early. Indexes, schema, and a bigger Atlas tier solve most problems first. Sharding adds ops and query complexity.',
+              'Interview: “scale out when one primary’s disk/CPU is the bottleneck, after you’ve exhausted vertical scale and good indexes.”',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
     ],
   },
   {
@@ -3946,6 +4107,56 @@ export const categoryData: Category[] = [
               'extras || \'{"theme":"dark"}\'::jsonb merges at the top level. Deep merge needs jsonb_set or jsonb_insert.',
               'Remove a key: extras - \'theme\'. Don’t string-replace JSON in the app if you can do it in SQL - races will clobber other keys.',
               'If you update the same keys all the time, that is a hint to promote them to columns.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'postgres-supabase',
+        title: 'Supabase',
+        questions: [
+          {
+            id: 'pg-40',
+            question: 'What is Supabase?',
+            answer: [
+              'Supabase is a Backend-as-a-Service built on Postgres: hosted DB plus Auth, Storage, Realtime, and auto-generated REST/GraphQL-ish APIs.',
+              'You still get a real Postgres instance (SQL, RLS, extensions). The dashboard and client SDK wrap common app needs.',
+              'Open-source core; you can self-host, but most teams use the cloud project URL + anon/service keys.',
+              'Interview: “Postgres with batteries - auth, storage, and realtime - not a new query language.”',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'pg-41',
+            question: 'When do you use Supabase?',
+            answer: [
+              'Use it when you want Postgres + auth + file storage fast: MVPs, indie apps, dashboards, React/Next apps without building a custom API first.',
+              'Row-level security (RLS) lets the browser talk to Postgres safely with the anon key when policies are written well.',
+              'Prefer a custom backend (Nest/Express + managed Postgres) when you need complex domain logic, multi-service architecture, or heavy non-SQL workloads.',
+              'Choose Atlas/Mongo if your data model is documents-first. Choose Supabase when SQL, joins, and Postgres tooling are the fit.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'pg-42',
+            question: 'Why do teams use Supabase?',
+            answer: [
+              'Speed: tables, auth (email/OAuth), and storage without wiring Stripe-of-infra yourself.',
+              'It’s still SQL - migrations, Prisma/Drizzle, and psql all work against the same database.',
+              'Realtime subscriptions and Edge Functions cover common “live UI” and light serverless jobs.',
+              'Tradeoff: you lean on their auth/RLS model; escaping later means migrating users and policies, not just rows.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'pg-43',
+            question: 'How do you use Supabase (basics)?',
+            answer: [
+              "Install `@supabase/supabase-js`, create a client with the project URL and anon key from the dashboard.",
+              "```\nconst { data, error } = await supabase\n  .from('todos')\n  .select('*')\n  .eq('user_id', userId)\n``` reads rows. `.insert` / `.update` / `.delete` are the write counterparts.",
+              '`supabase.auth.signInWithPassword({ email, password })` (or OAuth) issues a session JWT the client sends on later calls.',
+              'Enable RLS on tables and write policies. Never put the service_role key in the browser - it bypasses RLS.',
             ],
             difficulty: 'medium',
           },
@@ -6364,8 +6575,8 @@ export const categoryData: Category[] = [
   {
     id: 'testing',
     type: 'Testing',
-    name: 'Testing & Tooling',
-    blurb: 'Tests, lint, npm, Git hooks, PRs, and CI/CD.',
+    name: 'Testing',
+    blurb: 'Test mindset, Vitest, Testing Library, and coverage.',
     topics: [
       {
         id: 'test-basics',
@@ -6394,17 +6605,6 @@ export const categoryData: Category[] = [
             difficulty: 'medium',
           },
           {
-            id: 'te-3',
-            question: 'What is tree-shaking?',
-            answer: [
-              "The bundler drops exported code that nothing imports. `import { debounce }` from \"lodash-es\" can keep debounce and drop the rest.",
-              'Needs ES modules (import/export) and files without surprising side effects at import time.',
-              "Barrel files (export * from \".`/a`\"; export * from \".`/b`\") often pull the whole folder and block shaking.",
-              "CommonJS `require()` is harder to shake. Prefer named ESM exports for libraries you care about shipping small.",
-            ],
-            difficulty: 'medium',
-          },
-          {
             id: 'te-6',
             question: 'What is mocking, and when should you mock?',
             answer: [
@@ -6415,8 +6615,96 @@ export const categoryData: Category[] = [
             ],
             difficulty: 'medium',
           },
+          {
+            id: 'te-40',
+            question: 'Why are test cases necessary?',
+            answer: [
+              'They catch regressions before users do: a change that breaks login fails on your machine or in CI, not in production.',
+              'They document expected behavior. A good test name (`shows error when email is empty`) is a living spec for the next reader.',
+              'They let you refactor with confidence. Without tests, every cleanup is a gamble and teams stop improving the code.',
+              'Interview: “tests are a safety net and a contract.” They do not replace code review or design - they lock the behavior you already decided.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-41',
+            question: 'What is white-box vs black-box testing?',
+            answer: [
+              'Black-box: you test from the outside. You know inputs and expected outputs, not the internals. Example: click Save, expect “Saved” on screen.',
+              'White-box (clear-box): you design tests knowing the code paths - branches, loops, error handlers. Example: force both `if (user)` arms and the catch block.',
+              'Unit tests often lean white-box (you wrote the function). E2E and user-facing RTL tests lean black-box (behavior). Most teams mix both.',
+              'Interview: “black-box = what; white-box = how the code is structured.” Prefer black-box for UI confidence; use white-box to hit rare branches.',
+            ],
+            difficulty: 'easy',
+          },
         ],
       },
+      {
+        id: 'test-vitest-rtl',
+        title: 'Vitest & Testing Library',
+        questions: [
+          {
+            id: 'te-42',
+            question: 'What is Vitest, and how is it different from Jest?',
+            answer: [
+              'Vitest is a unit/integration test runner built for Vite projects. Same style as Jest: `describe`, `it`, `expect`, mocks - but it uses Vite’s transform pipeline.',
+              'Why teams pick it with Vite: fast startup, native ESM/TS, and one shared config story with the app. `npm test` → `vitest run` is common.',
+              'Jest is older and everywhere. API is almost the same (`vi.fn` ≈ `jest.fn`). Migrating is usually renaming imports, not rewriting every test.',
+              'Interview: “Jest-compatible runner that speaks Vite.” This repo uses Vitest + Testing Library for component tests.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-43',
+            question:
+              'What are render, screen, fireEvent, userEvent, and act in React tests?',
+            answer: [
+              "`render(<Comp />)` (Testing Library) mounts the component into a test DOM (jsdom). You assert on what appears, not on `wrapper.state`.",
+              '`screen` is the document queries: `screen.getByRole("button", { name: /save/i })`. Prefer role/label over test ids when you can.',
+              "`fireEvent.click(el)` is a low-level synthetic event. `@testing-library/user-event` (`await user.click(el)`) is closer to a real user (focus, pointer). Prefer userEvent for new tests.",
+              '`act(...)` wraps updates so React flushes effects before you assert. Testing Library’s `render` / `userEvent` already wrap most cases - if you see an “not wrapped in act” warning, an async update finished after the assertion.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-44',
+            question: 'How do you write better test cases?',
+            answer: [
+              'Name the behavior: `it("disables Save when the form is empty")`. Arrange → Act → Assert. One main idea per test.',
+              "Query like a user: ```\nscreen.getByRole(\"button\", { name: /save/i })\n``` not `container.querySelector(\".btn-primary\")`. Avoid testing private helpers through the UI.",
+              'Cover the sad path too: empty input, 401 from the API, network error. Happy-path-only suites ship false confidence.',
+              'Keep tests deterministic: mock time/network, no real sleeps, no order dependence. Delete or rewrite flaky tests - do not “retry until green.”',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'test-coverage',
+        title: 'Coverage',
+        questions: [
+          {
+            id: 'te-45',
+            question:
+              'What are line, branch, and function coverage? How important is the percentage?',
+            answer: [
+              'Line coverage: how many executable lines ran. Branch coverage: each `if`/`?:`/`&&` arm. Function coverage: how many functions were called at least once.',
+              'Coverage is a flashlight, not a grade. 100% can still miss bugs (wrong assertion, never tested a race). 40% with strong critical-path tests can beat 90% of empty `expect(true)`.',
+              'Common team bars: ~70-80% on new code, higher on payment/auth. There is no universal “must be 90%.” Enforce on changed files in CI more often than a vanity global number.',
+              'Interview: explain the three metrics, then say “risk-based: cover the money and auth paths; do not chase 100% for its own sake.”',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'tooling',
+    type: 'Tooling',
+    name: 'Tooling',
+    blurb: 'npm, bundlers, lint, Git hooks, PRs, bots, and GitHub Actions.',
+    topics: [
       {
         id: 'tooling-npm',
         title: 'npm & tooling',
@@ -6461,6 +6749,17 @@ export const categoryData: Category[] = [
         id: 'tooling-build',
         title: 'Compilers, engines & bundlers',
         questions: [
+          {
+            id: 'te-3',
+            question: 'What is tree-shaking?',
+            answer: [
+              "The bundler drops exported code that nothing imports. `import { debounce }` from \"lodash-es\" can keep debounce and drop the rest.",
+              'Needs ES modules (import/export) and files without surprising side effects at import time.',
+              "Barrel files (export * from \".`/a`\"; export * from \".`/b`\") often pull the whole folder and block shaking.",
+              "CommonJS `require()` is harder to shake. Prefer named ESM exports for libraries you care about shipping small.",
+            ],
+            difficulty: 'medium',
+          },
           {
             id: 'te-31',
             question: 'What is a compiler in a JavaScript / frontend app?',
@@ -6733,6 +7032,80 @@ export const categoryData: Category[] = [
             ],
             difficulty: 'medium',
           },
+          {
+            id: 'te-46',
+            question: 'What should you check before raising a PR?',
+            answer: [
+              'Rebase or merge latest `main`. Run lint, tests, and a local build. Fix failures yourself - do not “let CI tell me.”',
+              'Self-review the full diff: no secrets, no `console.log` noise, no unrelated formatting, no leftover TODOs that block ship.',
+              'Write title + description + test plan. Link the ticket. Mark draft if it is not ready for review yet.',
+              'Confirm the branch only contains this change. Split a mega-diff before you ask people to read it.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-47',
+            question: 'What should you do after raising a PR?',
+            answer: [
+              'Watch CI and bots (lint, tests, preview). Fix red checks quickly; do not leave a broken PR sitting for days.',
+              'Request the right reviewers and respond to comments: resolve threads when done, or reply why you disagree.',
+              'Keep the branch updated with `main` if the repo requires it. Do not force-push over history others are reviewing unless the team allows it.',
+              'When approved and green: merge with the repo’s method (squash / merge commit). Delete the branch if that is the house style. Follow up on any “todo in a follow-up” you promised.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-48',
+            question:
+              'As a PR reviewer, what should you keep in mind while checking a PR?',
+            answer: [
+              'Does it solve the ticket without extra scope? Would you merge it as-is if you owned prod tonight?',
+              'Correctness first: logic, edge cases, authz, data migrations. Then tests that lock the new behavior. Then clarity and naming.',
+              'Security pass: secrets in the diff, XSS/SQL injection, open redirects, dependency bumps you do not understand.',
+              'Be a partner: clear blockers vs nits, suggest fixes, approve when it is good enough. Do not hold the PR for taste-only rewrites.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'tooling-pr-bots',
+        title: 'PR bots',
+        questions: [
+          {
+            id: 'te-49',
+            question: 'What are bots on a GitHub pull request?',
+            answer: [
+              'Bots are automated GitHub users (GitHub Apps or Actions) that comment, check, label, or deploy when a PR opens or updates.',
+              'They show up in the conversation and Checks tabs: “Netlify: Deploy preview ready,” “Dependabot: bump lodash,” “Codecov: coverage +0.2%.”',
+              'Goal: repeatable work without a human - previews, dependency PRs, lint reports, size budgets - so reviewers focus on the product change.',
+              'Interview: “automation that reacts to PR events.” Not a person; still needs permissions and a install on the repo or org.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-50',
+            question:
+              'Where do you add a PR bot, and do you write the bot code yourself?',
+            answer: [
+              'Most teams install a GitHub App from the Marketplace (Netlify, Vercel, Codecov, Dependabot) on the org or repo - Settings → Integrations / GitHub Apps.',
+              'Many “bots” are just GitHub Actions workflows you commit under `.github/workflows/` (labeler, stale, size check). That YAML is the “bot code” you own.',
+              'You rarely hand-roll a full GitHub App unless you need custom org automation. Prefer an existing app or a small Action.',
+              'Permissions matter: a deploy bot needs the right secrets; never paste tokens into the workflow file. Interview: “install an app or write a workflow - both show up as bots on the PR.”',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-51',
+            question: 'What are common bots / apps you see on GitHub PRs?',
+            answer: [
+              'Preview deploy: Netlify, Vercel, Cloudflare Pages - comment a preview URL for every PR so you click the UI without merging.',
+              'Dependencies: Dependabot or Renovate open PRs that bump packages and show the changelog / CI result.',
+              'Quality: Codecov / Coveralls (coverage), CodeQL or security scanners, bundle-size / Lighthouse CI bots, Danger JS for custom rules.',
+              'Repo hygiene: stale-bot, labeler, welcome bots. Interview: name preview + Dependabot + coverage - those three show up in most product repos.',
+            ],
+            difficulty: 'easy',
+          },
         ],
       },
       {
@@ -6792,6 +7165,51 @@ export const categoryData: Category[] = [
               'CD (main or a release tag): take the CI artifact and ship it. Run smoke checks after. Keep prod secrets only on that job.',
               'A workflow names `jobs` (can run in parallel) and `steps` (run in order). `needs:` makes deploy wait for test. Matrix runs the same job on Node 20 and 22.',
               'Interview: “hooks are a courtesy; the workflow is the gate.” `git commit --no-verify` cannot skip GitHub Actions if the branch requires it.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-36',
+            question: 'Why use GitHub Actions, and what are common use cases?',
+            answer: [
+              'So every push/PR gets the same checks on a clean machine: lint, test, build - not “works on my laptop.” Branch protection can block merge until they pass.',
+              'Use cases: CI for PRs, deploy on `main`, scheduled jobs (cron), release publishing, preview environments, dependency automations, labeling PRs.',
+              'It lives next to the code in `.github/workflows/`, so the pipeline is reviewed like any other change. No separate Jenkins box required for many teams.',
+              'Interview: “automate verify + ship from the repo.” Name CI on PR and deploy on main as the two defaults.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'te-37',
+            question: 'How should GitHub Actions workflow code look?',
+            answer: [
+              "Put YAML under `.github/workflows/`. Name the workflow, set `on:`, then `jobs` with `runs-on` and `steps`. Prefer official actions for checkout and setup.",
+              "```\nname: CI\non:\n  pull_request:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 22\n          cache: npm\n      - run: npm ci\n      - run: npm run lint\n      - run: npm test\n      - run: npm run build\n```",
+              'Pin action versions (`@v4` or a commit SHA). Use `secrets.*` for tokens - never hardcode. Fail the job on the first real error (`set -e` is default for `run`).',
+              'Interview: show checkout → setup → ci → lint/test/build. That is the skeleton reviewers expect.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-38',
+            question:
+              'What should you think about before writing a GitHub Actions workflow?',
+            answer: [
+              'Trigger: PR only, push to main, schedule, or manual? Fork PRs must not get production secrets.',
+              'What is the source of truth check list: lint, typecheck, unit tests, build? Keep the PR job fast; put slow e2e on main or a label.',
+              'Caching (`cache: npm`), matrix (Node versions), and concurrency (`concurrency: cancel-in-progress`) so you do not burn minutes and queues.',
+              'Permissions: least privilege (`permissions: contents: read`). Who can approve deploy? Interview: “trigger, gates, secrets, speed” before you paste YAML.',
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'te-39',
+            question: 'What are disadvantages or pitfalls of GitHub Actions?',
+            answer: [
+              'Minutes and concurrency cost money at scale. Slow or chatty workflows block the team and train people to ignore red checks.',
+              'YAML sprawl and copy-paste across repos. Unpinned actions (`@main`) can break or get compromised - pin versions.',
+              'Secrets on fork PRs are dangerous. Self-hosted runners need hardening. Flaky tests in CI destroy trust in the whole pipeline.',
+              'Interview: “great default CI; watch cost, security of actions, and keeping the PR job fast.” Not a reason to skip tests - a reason to design the pipeline.',
             ],
             difficulty: 'medium',
           },
