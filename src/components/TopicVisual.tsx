@@ -50,7 +50,7 @@ export function TopicVisual({ type, className }: TopicVisualProps) {
   const file = ICON_BY_TYPE[type] ?? 'default.png'
   return (
     <img
-      src={`/category-icons/${file}`}
+      src={`${import.meta.env.BASE_URL}category-icons/${file}`}
       alt=""
       aria-hidden={true}
       className={className}
