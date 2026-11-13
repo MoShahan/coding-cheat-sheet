@@ -25,7 +25,7 @@ describe('App', () => {
       }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { level: 2, name: 'HTML' }),
+      screen.getByRole('heading', { level: 2, name: 'Algorithms' }),
     ).toBeInTheDocument()
     expect(screen.queryByText(/^9 notes$/)).not.toBeInTheDocument()
   })
@@ -45,32 +45,22 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
-  it('sorts categories alphabetically when A-Z is enabled', async () => {
-    const user = userEvent.setup()
+  it('lists categories alphabetically by type', () => {
     renderWithRouter(<App />)
 
     const nav = screen.getByRole('navigation', {
       name: /topic types/i,
     })
-    const categoryButtons = () =>
-      within(nav)
-        .getAllByRole('button')
-        .filter((button) => /: /.test(button.getAttribute('aria-label') ?? ''))
+    const categoryButtons = within(nav)
+      .getAllByRole('button')
+      .filter((button) => /: /.test(button.getAttribute('aria-label') ?? ''))
 
-    expect(categoryButtons()[0]).toHaveAccessibleName(/html:/i)
-
-    await user.click(
-      within(nav).getByRole('button', {
+    expect(categoryButtons[0]).toHaveAccessibleName(/algo:/i)
+    expect(
+      within(nav).queryByRole('button', {
         name: /sort categories alphabetically/i,
       }),
-    )
-
-    expect(categoryButtons()[0]).toHaveAccessibleName(/algo:/i)
-    expect(
-      within(nav).getByRole('button', {
-        name: /sort categories by default order/i,
-      }),
-    ).toHaveAttribute('aria-pressed', 'true')
+    ).not.toBeInTheDocument()
   })
 
   it('searches all topics and shows match counts on category tabs', async () => {

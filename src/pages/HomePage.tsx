@@ -17,8 +17,6 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { cn } from '../lib/cn'
 
-type CategorySort = 'default' | 'alpha'
-
 type ResultGroup = {
   category: Category
   topics: Topic[]
@@ -69,14 +67,6 @@ export function HomePage() {
   const { theme, toggleTheme } = useTheme()
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id)
   const [query, setQuery] = useState('')
-  const [categorySort, setCategorySort] = useState<CategorySort>('default')
-
-  const orderedCategories =
-    categorySort === 'alpha'
-      ? [...categories].sort((a, b) =>
-          a.type.localeCompare(b.type, undefined, { sensitivity: 'base' }),
-        )
-      : categories
 
   const activeCategory =
     categories.find((category) => category.id === activeCategoryId) ??
@@ -161,39 +151,13 @@ export function HomePage() {
           className="rounded-2xl border border-line bg-surface px-[0.7rem] py-[0.9rem] shadow-shell backdrop-blur-[14px] max-md:px-[0.65rem] max-md:pt-[0.7rem] max-md:pb-[0.75rem] max-sm:rounded-[14px]"
           aria-label="Topic types"
         >
-          <div className="mx-[0.3rem] mb-[0.7rem] flex items-center justify-between gap-2 max-md:mx-[0.15rem] max-md:mb-[0.55rem]">
+          <div className="mx-[0.3rem] mb-[0.7rem] max-md:mx-[0.15rem] max-md:mb-[0.55rem]">
             <p className="m-0 text-[0.68rem] font-bold tracking-[0.1em] text-muted uppercase">
               Browse by topic
             </p>
-            <button
-              type="button"
-              className={cn(
-                'cursor-pointer rounded-lg border border-line bg-transparent px-[0.45rem] py-[0.2rem] text-[0.68rem] font-bold tracking-wide text-muted transition-[background,color,border-color] duration-200 ease-out-quart hover:border-accent-strong hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong',
-                categorySort === 'alpha' &&
-                  'border-accent-strong bg-accent-soft text-accent-strong',
-              )}
-              aria-pressed={categorySort === 'alpha'}
-              aria-label={
-                categorySort === 'alpha'
-                  ? 'Sort categories by default order'
-                  : 'Sort categories alphabetically'
-              }
-              title={
-                categorySort === 'alpha'
-                  ? 'Default order'
-                  : 'Alphabetical (A-Z)'
-              }
-              onClick={() =>
-                setCategorySort((current) =>
-                  current === 'alpha' ? 'default' : 'alpha',
-                )
-              }
-            >
-              A-Z
-            </button>
           </div>
           <ul className="m-0 grid list-none gap-[0.15rem] p-0 max-md:flex max-md:gap-[0.4rem] max-md:overflow-x-auto max-md:overscroll-x-contain max-md:scroll-smooth max-md:px-[0.1rem] max-md:pt-[0.1rem] max-md:pb-[0.35rem] max-md:[scroll-snap-type:x_proximity] max-md:scrollbar-none">
-            {orderedCategories.map((category) => {
+            {categories.map((category) => {
               const isActive = category.id === activeCategory.id
               const matchCount = countFilteredQuestions(
                 filterTopics(category.topics, normalized),

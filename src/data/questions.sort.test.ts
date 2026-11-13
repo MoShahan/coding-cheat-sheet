@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { type Question,sortQuestions } from './questions'
+import {
+  categories,
+  type Category,
+  type Question,
+  sortCategoriesByType,
+  sortQuestions,
+} from './questions'
 
 describe('sortQuestions', () => {
   it('sorts by difficulty then alphabetically', () => {
@@ -37,5 +43,48 @@ describe('sortQuestions', () => {
       '3',
       '2',
     ])
+  })
+})
+
+describe('sortCategoriesByType', () => {
+  it('sorts by type A-Z regardless of input order', () => {
+    const input: Category[] = [
+      {
+        id: 'react',
+        type: 'React',
+        name: 'React',
+        blurb: '',
+        topics: [],
+      },
+      {
+        id: 'html',
+        type: 'HTML',
+        name: 'HTML',
+        blurb: '',
+        topics: [],
+      },
+      {
+        id: 'algo',
+        type: 'Algo',
+        name: 'Algorithms',
+        blurb: '',
+        topics: [],
+      },
+    ]
+
+    expect(sortCategoriesByType(input).map((c) => c.type)).toEqual([
+      'Algo',
+      'HTML',
+      'React',
+    ])
+  })
+
+  it('exports categories already sorted by type', () => {
+    const types = categories.map((c) => c.type)
+    expect(types).toEqual(
+      [...types].sort((a, b) =>
+        a.localeCompare(b, undefined, { sensitivity: 'base' }),
+      ),
+    )
   })
 })

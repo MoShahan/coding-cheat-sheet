@@ -57,6 +57,13 @@ export function withSortedQuestions(list: Category[]): Category[] {
   }))
 }
 
+/** Nav order: A-Z by short type label (JS, React, ...). File order in data does not matter. */
+export function sortCategoriesByType(list: Category[]): Category[] {
+  return [...list].sort((a, b) =>
+    a.type.localeCompare(b.type, undefined, { sensitivity: 'base' }),
+  )
+}
+
 export function countQuestions(category: Category): number {
   return category.topics.reduce((sum, topic) => sum + topic.questions.length, 0)
 }
