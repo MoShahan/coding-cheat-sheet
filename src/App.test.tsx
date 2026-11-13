@@ -56,10 +56,39 @@ describe('App', () => {
       .filter((button) => /: /.test(button.getAttribute('aria-label') ?? ''))
 
     expect(categoryButtons[0]).toHaveAccessibleName(/algo:/i)
+  })
+
+  it('opens an all-categories sheet from See all', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<App />)
+
+    await user.click(
+      screen.getByRole('button', { name: /^see all$/i, hidden: true }),
+    )
+
+    const dialog = screen.getByRole('dialog', { name: /all categories/i })
+    expect(dialog).toBeInTheDocument()
+
+    await user.type(
+      within(dialog).getByRole('searchbox', { name: /search categories/i }),
+      'react',
+    )
     expect(
-      within(nav).queryByRole('button', {
-        name: /sort categories alphabetically/i,
-      }),
+      within(dialog).getByRole('button', { name: /react: react/i }),
+    ).toBeInTheDocument()
+    expect(
+      within(dialog).queryByRole('button', { name: /algo: algorithms/i }),
+    ).not.toBeInTheDocument()
+
+    await user.click(
+      within(dialog).getByRole('button', { name: /react: react/i }),
+    )
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'React' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('dialog', { name: /all categories/i }),
     ).not.toBeInTheDocument()
   })
 

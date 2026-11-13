@@ -1,8 +1,16 @@
-import { type CSSProperties, useId, useState } from 'react'
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import { Link } from 'react-router-dom'
 
 import heroRevision from '../assets/hero-revision.jpg'
 import { AnswerNotes } from '../components/AnswerNotes'
+import { CategoryAllSheet } from '../components/CategoryAllSheet'
 import { CheatSheetExport } from '../components/CheatSheetExport'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { TopicVisual } from '../components/TopicVisual'
@@ -67,6 +75,8 @@ export function HomePage() {
   const { theme, toggleTheme } = useTheme()
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0].id)
   const [query, setQuery] = useState('')
+  const [categorySheetOpen, setCategorySheetOpen] = useState(false)
+  const activeChipRef = useRef<HTMLButtonElement | null>(null)
 
   const activeCategory =
     categories.find((category) => category.id === activeCategoryId) ??
@@ -79,8 +89,27 @@ export function HomePage() {
       ? [{ category: activeCategory, topics: activeTopics }]
       : []
 
-  function handleCategoryChange(categoryId: string) {
+  useEffect(() => {
+    const chip = activeChipRef.current
+    if (chip && typeof chip.scrollIntoView === 'function') {
+      chip.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      })
+    }
+  }, [activeCategoryId])
+
+  const handleCategoryChange = useCallback((categoryId: string) => {
     setActiveCategoryId(categoryId)
+  }, [])
+
+  const closeCategorySheet = useCallback(() => {
+    setCategorySheetOpen(false)
+  }, [])
+
+  function matchCountFor(category: Category): number {
+    return countFilteredQuestions(filterTopics(category.topics, normalized))
   }
 
   return (
@@ -151,20 +180,28 @@ export function HomePage() {
           className="rounded-2xl border border-line bg-surface px-[0.7rem] py-[0.9rem] shadow-shell backdrop-blur-[14px] max-md:px-[0.65rem] max-md:pt-[0.7rem] max-md:pb-[0.75rem] max-sm:rounded-[14px]"
           aria-label="Topic types"
         >
-          <div className="mx-[0.3rem] mb-[0.7rem] max-md:mx-[0.15rem] max-md:mb-[0.55rem]">
+          <div className="mx-[0.3rem] mb-[0.7rem] flex items-center justify-between gap-2 max-md:mx-[0.15rem] max-md:mb-[0.55rem]">
             <p className="m-0 text-[0.68rem] font-bold tracking-[0.1em] text-muted uppercase">
               Browse by topic
             </p>
+            <button
+              type="button"
+              className="cursor-pointer rounded-lg border-0 bg-transparent px-1 py-0.5 text-[0.72rem] font-bold tracking-wide text-accent-strong transition-colors duration-200 ease-out-quart hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong md:hidden"
+              aria-haspopup="dialog"
+              aria-expanded={categorySheetOpen}
+              onClick={() => setCategorySheetOpen(true)}
+            >
+              See all
+            </button>
           </div>
           <ul className="m-0 grid list-none gap-[0.15rem] p-0 max-md:flex max-md:gap-[0.4rem] max-md:overflow-x-auto max-md:overscroll-x-contain max-md:scroll-smooth max-md:px-[0.1rem] max-md:pt-[0.1rem] max-md:pb-[0.35rem] max-md:[scroll-snap-type:x_proximity] max-md:scrollbar-none">
             {categories.map((category) => {
               const isActive = category.id === activeCategory.id
-              const matchCount = countFilteredQuestions(
-                filterTopics(category.topics, normalized),
-              )
+              const matchCount = matchCountFor(category)
               return (
                 <li key={category.id}>
                   <button
+                    ref={isActive ? activeChipRef : undefined}
                     type="button"
                     className={cn(
                       'flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border px-[0.7rem] py-[0.65rem] text-left font-semibold transition-[background,color,border-color,opacity] duration-200 ease-out-quart max-md:min-h-11 max-md:shrink-0 max-md:whitespace-nowrap max-md:[scroll-snap-align:start]',
@@ -200,6 +237,16 @@ export function HomePage() {
             })}
           </ul>
         </nav>
+
+        <CategoryAllSheet
+          key={categorySheetOpen ? 'open' : 'closed'}
+          open={categorySheetOpen}
+          activeCategoryId={activeCategory.id}
+          matchCountFor={matchCountFor}
+          dimEmptyMatches={Boolean(normalized)}
+          onSelect={handleCategoryChange}
+          onClose={closeCategorySheet}
+        />
 
         <main
           className="animate-panel-in min-w-0 rounded-[22px] border border-line bg-surface px-[1.7rem] pt-6 pb-8 shadow-shell backdrop-blur-[14px] max-md:rounded-[18px] max-md:px-[0.95rem] max-md:pt-[1.15rem] max-md:pb-[1.4rem] max-md:shadow-none max-sm:rounded-[14px] max-sm:px-[0.85rem] max-sm:pt-4 max-sm:pb-5"
