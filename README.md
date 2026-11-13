@@ -35,11 +35,9 @@ License: [MIT](LICENSE)
 
 **ORMs:** Prisma, Drizzle
 
-**Algorithms:** searching (linear, binary, jump), sorting (bubble, selection, insertion, merge, quick, heap)
+**Algorithms:** searching, sorting, Big-O, interview patterns (two pointers, sliding window, DP, greedy), classic problems
 
 **Data structures:** arrays, stacks, queues, hash maps, linked lists, trees, graphs
-
-**DSA interview:** Big-O, time and space complexity classes, two pointers, sliding window, DP, greedy, backtracking, classic problems
 
 **Playground:** `/playground` - run vanilla JavaScript in a browser console (link from the home hero).
 

@@ -5705,7 +5705,7 @@ export const categoryData: Category[] = [
     id: 'algorithms',
     type: 'Algo',
     name: 'Algorithms',
-    blurb: 'Search and sort interview classics, with small snippets.',
+    blurb: 'Search, sort, Big-O, patterns, and classic coding-round problems.',
     topics: [
       {
         id: 'algo-search',
@@ -5917,288 +5917,6 @@ export const categoryData: Category[] = [
           },
         ],
       },
-    ],
-  },
-  {
-    id: 'data-structures',
-    type: 'DS',
-    name: 'Data structures',
-    blurb: 'Lists, trees, graphs, and the other interview primitives.',
-    topics: [
-      {
-        id: 'ds-core',
-        title: 'Arrays, stacks, queues, maps',
-        questions: [
-          {
-            id: 'ds-c1',
-            question: 'What is an array, and why is it used?',
-            answer: [
-              "A contiguous block of slots you index in `O(1)`: `arr[i]`. Length is known (or a capacity you resize).",
-              "Scan is `O(n)`. Insert/delete in the middle is `O(n)` because you shift neighbors. Append is `O(1)` amortized if the runtime grows capacity (JS arrays, Java ArrayList).",
-              'Use it when you need random access, a compact layout, or a simple list. Cache-friendly compared with pointer-chasing lists.',
-              "Interview: “index in `O(1)`, shift to insert in the middle.” That is the sentence they want.",
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-c2',
-            question: 'What is a stack, and why is it used?',
-            answer: [
-              "LIFO: last in, first out. Core ops: `push`, `pop`, `peek`. Array or linked list both work.",
-              'Used for: undo, browser back, call stack / recursion, matching brackets, DFS (explicit stack instead of recursion).',
-              "Time `O(1)` per push/pop. Do not use a stack when the first arrival should leave first (that is a queue).",
-              "```\nconst stack = [];\nstack.push(1);\nstack.push(2);\nconst top = stack.pop() // 2\n```",
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-c3',
-            question: 'What is a queue, and why is it used?',
-            answer: [
-              "FIFO: first in, first out. Core ops: `enqueue` (back), `dequeue` (front). A deque lets you push/pop both ends.",
-              'Used for: BFS, task/job queues, printers, message buffers, “next customer” scheduling.',
-              "Array `shift()` in JS is `O(n)`. Prefer an index head, a linked list, or a deque so dequeue stays `O(1)`.",
-              'Priority queue (heap) is “highest priority first,” not FIFO. Name the difference if they ask.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-c4',
-            question: 'What is a hash map (hash table), and why is it used?',
-            answer: [
-              "Key → value with average `O(1)` get/set/delete. Hash the key to a bucket, then store the pair there (with a collision list or open addressing).",
-              "Used for: counts, indexes, caches, “have I seen this id?”, grouping. JS `Map` / object, Python `dict`, Java `HashMap`.",
-              "Worst case `O(n)` if everything collides. Need a good hash and a resize strategy. Unordered unless you pick a linked/tree map.",
-              "Interview: average `O(1)`, collisions, and “not sorted.” Do not use a hash map when you need min/max or range queries (use a tree or heap).",
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-c5',
-            question: 'Array vs hash map vs list: when do you pick each?',
-            answer: [
-              'Array: ordered collection, index access, compact memory. “Give me the 10th item.”',
-              'Hash map: lookup by a key that is not an index. “Give me the user named ada.”',
-              'Linked list: frequent insert/delete at a known node, or you do not need random access. Rare as a first choice in app code.',
-              'Need min/max repeatedly: heap. Need sorted keys / ranges: balanced tree (TreeMap) or a sorted array plus binary search.',
-            ],
-            difficulty: 'easy',
-          },
-        ],
-      },
-      {
-        id: 'ds-lists',
-        title: 'Linked lists',
-        questions: [
-          {
-            id: 'ds-l1',
-            question: 'What is a linked list?',
-            answer: [
-              'A chain of nodes. Each node holds a value and a pointer to the next node (and maybe the previous). There is no index into the middle.',
-              "Singly: `value` + `next`. Doubly: also `prev` (walk both ways, delete with the node in hand). Circular: last `next` points at head.",
-              "Find by index is `O(n)`. Insert/delete at head is `O(1)`. Insert after a known node is `O(1)`; finding that node is `O(n)`.",
-              "```\nfunction Node(value) {\n  this.value = value;\n  this.next = null\n}\n``` then `head.next = new Node(2)`.",
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-l2',
-            question: 'Why are linked lists used?',
-            answer: [
-              "`O(1)` insert/delete once you hold the node (or its predecessor). No need to shift a whole array or reserve a big capacity.",
-              'They grow one node at a time. Useful when size is unknown and you only walk sequentially (stacks, queues, LRU list, undo).',
-              "Cost: extra pointer memory, poor cache locality, no `arr[i]`. In interviews they show up more than in modern app code.",
-              'Real systems still use them inside hash-map buckets, OS lists, and LRU caches (doubly linked + hash map).',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-l3',
-            question: 'Singly vs doubly vs circular linked list?',
-            answer: [
-              'Singly: smaller nodes, walk only forward. Reverse and “delete this node” need the previous pointer or a rewrite trick.',
-              'Doubly: `prev` makes delete and reverse easier. Browser history and LRU lists are the usual examples. Extra pointer per node.',
-              'Circular: last node points at head (or a dummy). Round-robin schedulers and Josephus-style problems. Easy to loop forever if you forget a stop.',
-              'Interview default is a singly list with `head`. Mention dummy/sentinel heads to simplify insert-at-front edge cases.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-l4',
-            question: 'How do you reverse a singly linked list?',
-            answer: [
-              "Walk once. Three pointers: `prev`, `curr`, `next`. Point `curr.next` at `prev`, then slide all three forward. New head is the last `prev`.",
-              "Iterative is `O(n)` time, `O(1)` extra space. Recursive is `O(n)` stack. Interviews usually want the iterative version.",
-              "Draw one node flip on the whiteboard before you write code. Off-by-one on the last `next` is the usual bug.",
-              "```\nfunction reverseList(head) {\n  let prev = null, curr = head\n  while (curr) {\n    const next = curr.next\n    curr.next = prev\n    prev = curr\n    curr = next\n  }\n  return prev\n}\n```",
-            ],
-            difficulty: 'medium',
-          },
-          {
-            id: 'ds-l5',
-            question: 'How do you detect a cycle in a linked list?',
-            answer: [
-              'Floyd’s tortoise and hare: slow walks one step, fast walks two. If they meet, there is a cycle. If fast hits null, there is not.',
-              "`O(n)` time, `O(1)` extra space. A set of visited nodes is `O(n)` space and also works.",
-              'To find the cycle start: after they meet, put one pointer at head; walk both one step at a time; they meet at the entrance.',
-              "```\nfunction hasCycle(head) {\n  let slow = head, fast = head\n  while (fast && fast.next) {\n    slow = slow.next\n    fast = fast.next.next\n    if (slow === fast) return true\n  }\n  return false\n}\n```",
-            ],
-            difficulty: 'medium',
-          },
-        ],
-      },
-      {
-        id: 'ds-trees',
-        title: 'Trees',
-        questions: [
-          {
-            id: 'ds-t1',
-            question: 'What is a tree?',
-            answer: [
-              'A connected acyclic graph with a chosen root (in CS). Each node has children. No cycles; one path from the root to any node.',
-              'Binary tree: at most two children (left/right). n-ary: any number (DOM, file folders). Leaf: no children. Height: longest root-to-leaf path.',
-              'A tree of n nodes has n - 1 edges. If you can walk back to an ancestor without going through the parent, it is not a tree.',
-              'Interview: “hierarchical, no cycles, one parent (except the root).” Then name BST, heap, or trie if they ask for types.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-t2',
-            question: 'Why are trees used?',
-            answer: [
-              'They model hierarchy: file systems, org charts, HTML/DOM, parse trees, decision trees.',
-              "A balanced BST gives `O(log n)` search/insert/delete. A heap gives `O(1)` peek at min/max and `O(log n)` insert.",
-              'Tries (prefix trees) share prefixes for autocomplete and dictionaries. Segment / Fenwick trees answer range queries.',
-              'If the data is a hierarchy or you need log-n ordered ops, start with a tree. If it is a network with many-to-many links, that is a graph.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-t3',
-            question: 'What are the common types of trees?',
-            answer: [
-              'Binary tree: left/right only. Full (0 or 2 children), complete (filled left to right), perfect (every level full).',
-              "BST: left < node < right (or <=). Inorder walk is sorted. Unbalanced BST can degrade to `O(n)` (a sorted insert chain).",
-              'Self-balancing BST: AVL, red-black (TreeMap). Heap: complete binary tree used as a priority queue, not a search tree.',
-              'Trie: children keyed by character. B-tree / B+ tree: wide nodes for disks and databases. Know BST + heap + “balanced” for interviews.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-t4',
-            question: 'What is a binary search tree, and how do you search it?',
-            answer: [
-              'For every node, all keys in the left subtree are smaller, all keys on the right are larger. That is what makes search log n when balanced.',
-              'Search: compare the target to the node; go left or right; stop on match or null. Same idea as binary search, but on pointers.',
-              'Insert walks the same path and hangs a new leaf. Delete has three cases: leaf, one child, two children (replace with inorder successor).',
-              "```\nfunction searchBST(node, target) {\n  if (!node || node.value === target) return node\n  return target < node.value\n    ? searchBST(node.left, target)\n    : searchBST(node.right, target)\n}\n```",
-            ],
-            difficulty: 'medium',
-          },
-          {
-            id: 'ds-t5',
-            question: 'What are the tree traversals?',
-            answer: [
-              'DFS orderings: preorder (node, left, right), inorder (left, node, right), postorder (left, right, node). Inorder on a BST is sorted.',
-              'BFS / level order: queue, visit a node, enqueue its children. Used for “level by level” and shortest path in an unweighted tree.',
-              'Use cases: preorder to clone/serialize, inorder for sorted BST, postorder to delete children first or evaluate an expression tree.',
-              "```\nfunction inorder(node, out = []) {\n  if (!node) return out\n  inorder(node.left, out)\n  out.push(node.value)\n  inorder(node.right, out)\n  return out\n}\n```",
-            ],
-            difficulty: 'medium',
-          },
-          {
-            id: 'ds-t6',
-            question: 'What is a heap, and how is it different from a BST?',
-            answer: [
-              'A heap is a complete binary tree that is heap-ordered: parent <= children (min-heap) or parent >= children (max-heap). Usually stored in an array.',
-              "Peek min/max is `O(1)`. Insert and pop are `O(log n)` via bubble up / sift down. You do not get cheap “find this key” like a BST.",
-              "Used for priority queues, heapsort, Dijkstra, and “k largest.” Index math: left = 2i+1, right = 2i+2, parent = `floor((i-1)/2)`.",
-              'BST is for ordered search. Heap is for “always give me the extreme.” Do not say they are the same tree.',
-            ],
-            difficulty: 'medium',
-          },
-        ],
-      },
-      {
-        id: 'ds-graphs',
-        title: 'Graphs',
-        questions: [
-          {
-            id: 'ds-g1',
-            question: 'What is a graph?',
-            answer: [
-              'A set of vertices (nodes) plus a set of edges (links between nodes). An edge can be one-way or two-way, and it can carry a weight.',
-              'Written G = (V, E). Degree is how many edges touch a vertex. A path is a walk with no repeated vertices; a cycle returns to the start.',
-              'A tree is a special graph: connected, undirected, no cycles. A graph can have many roots, cycles, and disconnected pieces.',
-              'Interview: “nodes and edges; trees are graphs with extra rules.” Then say how you store it (adjacency list vs matrix).',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-g2',
-            question: 'What are the different types of graphs?',
-            answer: [
-              'Directed vs undirected: A → B is one-way (Twitter follow, page links); A-B is two-way (Facebook friends, an undirected road).',
-              'Weighted vs unweighted: edges have a cost (distance, time) or they do not. Cyclic vs acyclic. A DAG is a directed acyclic graph (build deps, git).',
-              'Connected: every node can reach every other (undirected). Strongly connected: that, following arrow direction. Complete: every pair has an edge.',
-              'Also asked: bipartite (two sides, edges only between sides), sparse vs dense, multigraph (parallel edges). A tree is connected + acyclic + undirected.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-g3',
-            question: 'Why are graphs used?',
-            answer: [
-              'They model “things and relationships”: maps and routes, social networks, the web, package/build dependencies, knowledge graphs.',
-              'Algorithms on that model: shortest path (Dijkstra, BFS), reachability (DFS), cycle detection, topological sort on a DAG, MST (Kruskal/Prim).',
-              'If you only have a hierarchy with one parent, a tree is enough. If a node can have many neighbors and cycles matter, you need a graph.',
-              'Interview examples: friends-of-friends, flight connections, course prerequisites, garbage-collector object graphs.',
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-g4',
-            question: 'How do you represent a graph in code?',
-            answer: [
-              "Adjacency list: map each node to its neighbors. Space `O(V + E)`. Default for sparse graphs (the usual interview and real-world case).",
-              "Adjacency matrix: V x V grid, 1 or a weight at [i][j]. Space `O(V^2)`. `O(1)` “is there an edge?”. Heavy when V is large and E is small.",
-              'Edge list: just pairs (u, v, w). Fine for Kruskal. You still build a list or matrix before BFS/DFS.',
-              "```\nconst graph = { A: [\"B\", \"C\"], B: [\"D\"], C: [], D: [] }\n``` is an adjacency list for a directed graph.",
-            ],
-            difficulty: 'easy',
-          },
-          {
-            id: 'ds-g5',
-            question: 'What is the difference between BFS and DFS on a graph?',
-            answer: [
-              'BFS uses a queue: visit a node, then all neighbors, then their neighbors. Finds the shortest path in hops on an unweighted graph.',
-              'DFS uses a stack or recursion: go deep on one path, then backtrack. Good for cycles, connectivity, topological sort, maze-style search.',
-              "Both are `O(V + E)` on an adjacency list if you mark visited. Forgetting `visited` on a cyclic graph is infinite recursion / a hang.",
-              "```\nfunction bfs(start, graph) {\n  const q = [start], seen = new Set([start]), out = []\n  while (q.length) {\n    const node = q.shift()\n    out.push(node)\n    for (const n of graph[node] || []) {\n      if (!seen.has(n)) { seen.add(n); q.push(n) }\n    }\n  }\n  return out\n}\n```",
-            ],
-            difficulty: 'medium',
-          },
-          {
-            id: 'ds-g6',
-            question: 'When do you pick BFS vs DFS?',
-            answer: [
-              'BFS: shortest path in an unweighted graph, “nodes k hops away,” level-order, nearest exit in a grid.',
-              'DFS: detect a cycle, topological sort on a DAG, connected components (either works), path existence, generating permutations / backtracking.',
-              'Weighted shortest path is not plain BFS: use Dijkstra (non-negative weights) or Bellman-Ford (negatives allowed, no neg cycle you accept).',
-              'Interview: “BFS for shortest hops, DFS for explore / cycles / topo.” Mention `visited` on both.',
-            ],
-            difficulty: 'medium',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'dsa',
-    type: 'DSA',
-    name: 'DSA interview',
-    blurb: 'Complexity, patterns, and classic coding-round problems.',
-    topics: [
       {
         id: 'dsa-approach',
         title: 'Complexity & approach',
@@ -6567,6 +6285,280 @@ export const categoryData: Category[] = [
               'If stuck, write brute force Big-O, then ask which constraint to attack (time, space, or “must be online”). That is still a strong interview.',
             ],
             difficulty: 'easy',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'data-structures',
+    type: 'DS',
+    name: 'Data structures',
+    blurb: 'Lists, trees, graphs, and the other interview primitives.',
+    topics: [
+      {
+        id: 'ds-core',
+        title: 'Arrays, stacks, queues, maps',
+        questions: [
+          {
+            id: 'ds-c1',
+            question: 'What is an array, and why is it used?',
+            answer: [
+              "A contiguous block of slots you index in `O(1)`: `arr[i]`. Length is known (or a capacity you resize).",
+              "Scan is `O(n)`. Insert/delete in the middle is `O(n)` because you shift neighbors. Append is `O(1)` amortized if the runtime grows capacity (JS arrays, Java ArrayList).",
+              'Use it when you need random access, a compact layout, or a simple list. Cache-friendly compared with pointer-chasing lists.',
+              "Interview: “index in `O(1)`, shift to insert in the middle.” That is the sentence they want.",
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-c2',
+            question: 'What is a stack, and why is it used?',
+            answer: [
+              "LIFO: last in, first out. Core ops: `push`, `pop`, `peek`. Array or linked list both work.",
+              'Used for: undo, browser back, call stack / recursion, matching brackets, DFS (explicit stack instead of recursion).',
+              "Time `O(1)` per push/pop. Do not use a stack when the first arrival should leave first (that is a queue).",
+              "```\nconst stack = [];\nstack.push(1);\nstack.push(2);\nconst top = stack.pop() // 2\n```",
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-c3',
+            question: 'What is a queue, and why is it used?',
+            answer: [
+              "FIFO: first in, first out. Core ops: `enqueue` (back), `dequeue` (front). A deque lets you push/pop both ends.",
+              'Used for: BFS, task/job queues, printers, message buffers, “next customer” scheduling.',
+              "Array `shift()` in JS is `O(n)`. Prefer an index head, a linked list, or a deque so dequeue stays `O(1)`.",
+              'Priority queue (heap) is “highest priority first,” not FIFO. Name the difference if they ask.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-c4',
+            question: 'What is a hash map (hash table), and why is it used?',
+            answer: [
+              "Key → value with average `O(1)` get/set/delete. Hash the key to a bucket, then store the pair there (with a collision list or open addressing).",
+              "Used for: counts, indexes, caches, “have I seen this id?”, grouping. JS `Map` / object, Python `dict`, Java `HashMap`.",
+              "Worst case `O(n)` if everything collides. Need a good hash and a resize strategy. Unordered unless you pick a linked/tree map.",
+              "Interview: average `O(1)`, collisions, and “not sorted.” Do not use a hash map when you need min/max or range queries (use a tree or heap).",
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-c5',
+            question: 'Array vs hash map vs list: when do you pick each?',
+            answer: [
+              'Array: ordered collection, index access, compact memory. “Give me the 10th item.”',
+              'Hash map: lookup by a key that is not an index. “Give me the user named ada.”',
+              'Linked list: frequent insert/delete at a known node, or you do not need random access. Rare as a first choice in app code.',
+              'Need min/max repeatedly: heap. Need sorted keys / ranges: balanced tree (TreeMap) or a sorted array plus binary search.',
+            ],
+            difficulty: 'easy',
+          },
+        ],
+      },
+      {
+        id: 'ds-lists',
+        title: 'Linked lists',
+        questions: [
+          {
+            id: 'ds-l1',
+            question: 'What is a linked list?',
+            answer: [
+              'A chain of nodes. Each node holds a value and a pointer to the next node (and maybe the previous). There is no index into the middle.',
+              "Singly: `value` + `next`. Doubly: also `prev` (walk both ways, delete with the node in hand). Circular: last `next` points at head.",
+              "Find by index is `O(n)`. Insert/delete at head is `O(1)`. Insert after a known node is `O(1)`; finding that node is `O(n)`.",
+              "```\nfunction Node(value) {\n  this.value = value;\n  this.next = null\n}\n``` then `head.next = new Node(2)`.",
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-l2',
+            question: 'Why are linked lists used?',
+            answer: [
+              "`O(1)` insert/delete once you hold the node (or its predecessor). No need to shift a whole array or reserve a big capacity.",
+              'They grow one node at a time. Useful when size is unknown and you only walk sequentially (stacks, queues, LRU list, undo).',
+              "Cost: extra pointer memory, poor cache locality, no `arr[i]`. In interviews they show up more than in modern app code.",
+              'Real systems still use them inside hash-map buckets, OS lists, and LRU caches (doubly linked + hash map).',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-l3',
+            question: 'Singly vs doubly vs circular linked list?',
+            answer: [
+              'Singly: smaller nodes, walk only forward. Reverse and “delete this node” need the previous pointer or a rewrite trick.',
+              'Doubly: `prev` makes delete and reverse easier. Browser history and LRU lists are the usual examples. Extra pointer per node.',
+              'Circular: last node points at head (or a dummy). Round-robin schedulers and Josephus-style problems. Easy to loop forever if you forget a stop.',
+              'Interview default is a singly list with `head`. Mention dummy/sentinel heads to simplify insert-at-front edge cases.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-l4',
+            question: 'How do you reverse a singly linked list?',
+            answer: [
+              "Walk once. Three pointers: `prev`, `curr`, `next`. Point `curr.next` at `prev`, then slide all three forward. New head is the last `prev`.",
+              "Iterative is `O(n)` time, `O(1)` extra space. Recursive is `O(n)` stack. Interviews usually want the iterative version.",
+              "Draw one node flip on the whiteboard before you write code. Off-by-one on the last `next` is the usual bug.",
+              "```\nfunction reverseList(head) {\n  let prev = null, curr = head\n  while (curr) {\n    const next = curr.next\n    curr.next = prev\n    prev = curr\n    curr = next\n  }\n  return prev\n}\n```",
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'ds-l5',
+            question: 'How do you detect a cycle in a linked list?',
+            answer: [
+              'Floyd’s tortoise and hare: slow walks one step, fast walks two. If they meet, there is a cycle. If fast hits null, there is not.',
+              "`O(n)` time, `O(1)` extra space. A set of visited nodes is `O(n)` space and also works.",
+              'To find the cycle start: after they meet, put one pointer at head; walk both one step at a time; they meet at the entrance.',
+              "```\nfunction hasCycle(head) {\n  let slow = head, fast = head\n  while (fast && fast.next) {\n    slow = slow.next\n    fast = fast.next.next\n    if (slow === fast) return true\n  }\n  return false\n}\n```",
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'ds-trees',
+        title: 'Trees',
+        questions: [
+          {
+            id: 'ds-t1',
+            question: 'What is a tree?',
+            answer: [
+              'A connected acyclic graph with a chosen root (in CS). Each node has children. No cycles; one path from the root to any node.',
+              'Binary tree: at most two children (left/right). n-ary: any number (DOM, file folders). Leaf: no children. Height: longest root-to-leaf path.',
+              'A tree of n nodes has n - 1 edges. If you can walk back to an ancestor without going through the parent, it is not a tree.',
+              'Interview: “hierarchical, no cycles, one parent (except the root).” Then name BST, heap, or trie if they ask for types.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-t2',
+            question: 'Why are trees used?',
+            answer: [
+              'They model hierarchy: file systems, org charts, HTML/DOM, parse trees, decision trees.',
+              "A balanced BST gives `O(log n)` search/insert/delete. A heap gives `O(1)` peek at min/max and `O(log n)` insert.",
+              'Tries (prefix trees) share prefixes for autocomplete and dictionaries. Segment / Fenwick trees answer range queries.',
+              'If the data is a hierarchy or you need log-n ordered ops, start with a tree. If it is a network with many-to-many links, that is a graph.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-t3',
+            question: 'What are the common types of trees?',
+            answer: [
+              'Binary tree: left/right only. Full (0 or 2 children), complete (filled left to right), perfect (every level full).',
+              "BST: left < node < right (or <=). Inorder walk is sorted. Unbalanced BST can degrade to `O(n)` (a sorted insert chain).",
+              'Self-balancing BST: AVL, red-black (TreeMap). Heap: complete binary tree used as a priority queue, not a search tree.',
+              'Trie: children keyed by character. B-tree / B+ tree: wide nodes for disks and databases. Know BST + heap + “balanced” for interviews.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-t4',
+            question: 'What is a binary search tree, and how do you search it?',
+            answer: [
+              'For every node, all keys in the left subtree are smaller, all keys on the right are larger. That is what makes search log n when balanced.',
+              'Search: compare the target to the node; go left or right; stop on match or null. Same idea as binary search, but on pointers.',
+              'Insert walks the same path and hangs a new leaf. Delete has three cases: leaf, one child, two children (replace with inorder successor).',
+              "```\nfunction searchBST(node, target) {\n  if (!node || node.value === target) return node\n  return target < node.value\n    ? searchBST(node.left, target)\n    : searchBST(node.right, target)\n}\n```",
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'ds-t5',
+            question: 'What are the tree traversals?',
+            answer: [
+              'DFS orderings: preorder (node, left, right), inorder (left, node, right), postorder (left, right, node). Inorder on a BST is sorted.',
+              'BFS / level order: queue, visit a node, enqueue its children. Used for “level by level” and shortest path in an unweighted tree.',
+              'Use cases: preorder to clone/serialize, inorder for sorted BST, postorder to delete children first or evaluate an expression tree.',
+              "```\nfunction inorder(node, out = []) {\n  if (!node) return out\n  inorder(node.left, out)\n  out.push(node.value)\n  inorder(node.right, out)\n  return out\n}\n```",
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'ds-t6',
+            question: 'What is a heap, and how is it different from a BST?',
+            answer: [
+              'A heap is a complete binary tree that is heap-ordered: parent <= children (min-heap) or parent >= children (max-heap). Usually stored in an array.',
+              "Peek min/max is `O(1)`. Insert and pop are `O(log n)` via bubble up / sift down. You do not get cheap “find this key” like a BST.",
+              "Used for priority queues, heapsort, Dijkstra, and “k largest.” Index math: left = 2i+1, right = 2i+2, parent = `floor((i-1)/2)`.",
+              'BST is for ordered search. Heap is for “always give me the extreme.” Do not say they are the same tree.',
+            ],
+            difficulty: 'medium',
+          },
+        ],
+      },
+      {
+        id: 'ds-graphs',
+        title: 'Graphs',
+        questions: [
+          {
+            id: 'ds-g1',
+            question: 'What is a graph?',
+            answer: [
+              'A set of vertices (nodes) plus a set of edges (links between nodes). An edge can be one-way or two-way, and it can carry a weight.',
+              'Written G = (V, E). Degree is how many edges touch a vertex. A path is a walk with no repeated vertices; a cycle returns to the start.',
+              'A tree is a special graph: connected, undirected, no cycles. A graph can have many roots, cycles, and disconnected pieces.',
+              'Interview: “nodes and edges; trees are graphs with extra rules.” Then say how you store it (adjacency list vs matrix).',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-g2',
+            question: 'What are the different types of graphs?',
+            answer: [
+              'Directed vs undirected: A → B is one-way (Twitter follow, page links); A-B is two-way (Facebook friends, an undirected road).',
+              'Weighted vs unweighted: edges have a cost (distance, time) or they do not. Cyclic vs acyclic. A DAG is a directed acyclic graph (build deps, git).',
+              'Connected: every node can reach every other (undirected). Strongly connected: that, following arrow direction. Complete: every pair has an edge.',
+              'Also asked: bipartite (two sides, edges only between sides), sparse vs dense, multigraph (parallel edges). A tree is connected + acyclic + undirected.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-g3',
+            question: 'Why are graphs used?',
+            answer: [
+              'They model “things and relationships”: maps and routes, social networks, the web, package/build dependencies, knowledge graphs.',
+              'Algorithms on that model: shortest path (Dijkstra, BFS), reachability (DFS), cycle detection, topological sort on a DAG, MST (Kruskal/Prim).',
+              'If you only have a hierarchy with one parent, a tree is enough. If a node can have many neighbors and cycles matter, you need a graph.',
+              'Interview examples: friends-of-friends, flight connections, course prerequisites, garbage-collector object graphs.',
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-g4',
+            question: 'How do you represent a graph in code?',
+            answer: [
+              "Adjacency list: map each node to its neighbors. Space `O(V + E)`. Default for sparse graphs (the usual interview and real-world case).",
+              "Adjacency matrix: V x V grid, 1 or a weight at [i][j]. Space `O(V^2)`. `O(1)` “is there an edge?”. Heavy when V is large and E is small.",
+              'Edge list: just pairs (u, v, w). Fine for Kruskal. You still build a list or matrix before BFS/DFS.',
+              "```\nconst graph = { A: [\"B\", \"C\"], B: [\"D\"], C: [], D: [] }\n``` is an adjacency list for a directed graph.",
+            ],
+            difficulty: 'easy',
+          },
+          {
+            id: 'ds-g5',
+            question: 'What is the difference between BFS and DFS on a graph?',
+            answer: [
+              'BFS uses a queue: visit a node, then all neighbors, then their neighbors. Finds the shortest path in hops on an unweighted graph.',
+              'DFS uses a stack or recursion: go deep on one path, then backtrack. Good for cycles, connectivity, topological sort, maze-style search.',
+              "Both are `O(V + E)` on an adjacency list if you mark visited. Forgetting `visited` on a cyclic graph is infinite recursion / a hang.",
+              "```\nfunction bfs(start, graph) {\n  const q = [start], seen = new Set([start]), out = []\n  while (q.length) {\n    const node = q.shift()\n    out.push(node)\n    for (const n of graph[node] || []) {\n      if (!seen.has(n)) { seen.add(n); q.push(n) }\n    }\n  }\n  return out\n}\n```",
+            ],
+            difficulty: 'medium',
+          },
+          {
+            id: 'ds-g6',
+            question: 'When do you pick BFS vs DFS?',
+            answer: [
+              'BFS: shortest path in an unweighted graph, “nodes k hops away,” level-order, nearest exit in a grid.',
+              'DFS: detect a cycle, topological sort on a DAG, connected components (either works), path existence, generating permutations / backtracking.',
+              'Weighted shortest path is not plain BFS: use Dijkstra (non-negative weights) or Bellman-Ford (negatives allowed, no neg cycle you accept).',
+              'Interview: “BFS for shortest hops, DFS for explore / cycles / topo.” Mention `visited` on both.',
+            ],
+            difficulty: 'medium',
           },
         ],
       },

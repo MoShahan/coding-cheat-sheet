@@ -39,7 +39,6 @@ const ICON_BY_TYPE: Record<string, string> = {
   VB: 'vb.png',
   Algo: 'algo.png',
   DS: 'ds.png',
-  DSA: 'dsa.png',
   Redis: 'redis.png',
   Files: 'files.png',
   Testing: 'testing.png',
